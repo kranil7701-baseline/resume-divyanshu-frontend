@@ -1,1 +1,3 @@
-export const API='https://resume-divyanshu-backend.vercel.app'
+// export const API = 'http://localhost:8000';
+
+export const API = 'https://resume-divyanshu-backend.vercel.app'

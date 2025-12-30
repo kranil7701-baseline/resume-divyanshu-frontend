@@ -30,7 +30,7 @@ export default function Hero() {
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-300">
                         <Link
-                            href="/dashboard"
+                            href="/signup"
                             className="px-8 py-4 bg-gray-900 text-white rounded-xl font-bold hover:bg-black hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
                         >
                             Build My Resume Free

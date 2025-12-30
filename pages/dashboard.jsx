@@ -12,6 +12,7 @@ import EducationSection from '@/components/Education';
 import ProjectsSection from '@/components/Projects';
 import CertificationsSection from '@/components/Certifications';
 import GenerateResume from '@/components/GenerateResume'; // [NEW]
+import UserResume from '@/components/UserResume';
 import Sidebar from '@/components/Sidebar'; // [NEW] Import Sidebar
 
 export default function Dashboard() {
@@ -138,7 +139,7 @@ export default function Dashboard() {
             <p className="text-gray-500 mt-1">Welcome back, {user?.name || "Creator"}</p>
           </div>
 
-          <div className="flex items-center gap-3">
+          {/* <div className="flex items-center gap-3">
             <button
               onClick={() => router.push('/resume/preview')}
               className="cursor-pointer px-5 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-sm flex items-center gap-2"
@@ -148,7 +149,7 @@ export default function Dashboard() {
             <button className="cursor-pointer px-5 py-2.5 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-800 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2 shadow-gray-900/20 shadow-md">
               <span>📥</span> Download PDF
             </button>
-          </div>
+          </div> */}
         </header>
 
         <div className="flex flex-col lg:flex-row gap-8 py-6">
@@ -195,6 +196,9 @@ export default function Dashboard() {
                 )}
                 {activeTab === 'generate' && (
                   <GenerateResume data={userData} />
+                )}
+                {activeTab === 'userresume' && (
+                  <UserResume data={userData} />
                 )}
               </div>
 

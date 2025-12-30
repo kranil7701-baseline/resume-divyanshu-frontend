@@ -1,6 +1,6 @@
 // components/Sidebar.js
 import React from "react";
-import { User, Layers, Briefcase, BookOpen, Star, Award, ChevronRight, FileText } from "lucide-react";
+import { User, Layers, Briefcase, BookOpen, Star, Award, ChevronRight, FileText, Zap } from "lucide-react";
 
 export default function Sidebar({ activeTab, setActiveTab, userData }) {
   const items = [
@@ -10,6 +10,7 @@ export default function Sidebar({ activeTab, setActiveTab, userData }) {
     { id: "education", label: "Education", Icon: BookOpen, color: "text-green-500", bg: "bg-green-50" },
     { id: "projects", label: "Projects", Icon: Layers, color: "text-pink-500", bg: "bg-pink-50" },
     { id: "certifications", label: "Certifications", Icon: Award, color: "text-indigo-500", bg: "bg-indigo-50" },
+    { id: "userresume", label: "User Resume", Icon: Zap, color: "text-orange-500", bg: "bg-orange-50" },
     { id: "generate", label: "Generate Resume", Icon: FileText, color: "text-gray-900", bg: "bg-gray-200" },
   ];
 

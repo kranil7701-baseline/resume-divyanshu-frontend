@@ -7,15 +7,15 @@ import { useRouter } from 'next/router';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-   const router = useRouter();
+  const router = useRouter();
 
 
   // Updated navigation items for resume builder
   const navItems = [
-    { label: 'Templates', href: '/templates' },
-    { label: 'Examples', href: '/examples' },
-    { label: 'Pricing', href: '/pricing' },
-    { label: 'Blog', href: '/blog' },
+    { label: 'Templates', href: '/' },
+    { label: 'Examples', href: '/' },
+    { label: 'Pricing', href: '/' },
+    { label: 'Blog', href: '/' },
   ];
 
   return (
@@ -49,7 +49,7 @@ const Navbar = () => {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <button onClick={()=>router.push('/signin')} className="text-gray-600 cursor-pointer hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-300">
+            <button onClick={() => router.push('/signin')} className="text-gray-600 cursor-pointer hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-300">
               Sign In
             </button>
             <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
@@ -99,7 +99,7 @@ const Navbar = () => {
             </Link>
           ))}
           <div className="pt-4 pb-2 border-t border-gray-200 space-y-2">
-            <button onClick={()=>router.push('/signin')} className="w-full text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium text-left transition duration-300">
+            <button onClick={() => router.push('/signin')} className="w-full text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium text-left transition duration-300">
               Sign In
             </button>
             <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-base font-medium transition duration-300">

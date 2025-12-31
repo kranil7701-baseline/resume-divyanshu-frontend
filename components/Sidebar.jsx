@@ -1,6 +1,6 @@
 // components/Sidebar.js
 import React from "react";
-import { User, Layers, Briefcase, BookOpen, Star, Award, ChevronRight, FileText, Zap } from "lucide-react";
+import { User, Layers, Briefcase, BookOpen, Star, Award, ChevronRight, FileText, Zap, Globe } from "lucide-react";
 
 export default function Sidebar({ activeTab, setActiveTab, userData }) {
   const items = [
@@ -9,22 +9,23 @@ export default function Sidebar({ activeTab, setActiveTab, userData }) {
     { id: "experience", label: "Experience", Icon: Briefcase, color: "text-purple-500", bg: "bg-purple-50" },
     { id: "education", label: "Education", Icon: BookOpen, color: "text-green-500", bg: "bg-green-50" },
     { id: "projects", label: "Projects", Icon: Layers, color: "text-pink-500", bg: "bg-pink-50" },
+    { id: "social", label: "Social Media", Icon: Globe, color: "text-cyan-500", bg: "bg-cyan-50" },
     { id: "certifications", label: "Certifications", Icon: Award, color: "text-indigo-500", bg: "bg-indigo-50" },
     { id: "userresume", label: "User Resume", Icon: Zap, color: "text-orange-500", bg: "bg-orange-50" },
     { id: "generate", label: "Generate Resume", Icon: FileText, color: "text-gray-900", bg: "bg-gray-200" },
   ];
 
   return (
-    <aside className="lg:w-80 w-full flex-shrink-0 bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-xl rounded-3xl p-6 flex flex-col gap-6 sticky top-24 h-fit transition-all hover:bg-slate-900/90">
+    <aside className="lg:w-64 w-full flex-shrink-0 bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-xl rounded-3xl p-4 flex flex-col gap-4 sticky top-20 h-fit transition-all hover:bg-slate-900/90">
 
       {/* Profile Summary Header (Mini) */}
-      <div className="flex items-center gap-4 px-2">
-        <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold text-lg shadow-lg ring-2 ring-white/10">
+      <div className="flex items-center gap-3 px-1">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold text-base shadow-lg ring-1 ring-white/10">
           {userData?.profile?.name ? userData.profile.name[0] : "U"}
         </div>
         <div>
-          <h3 className="font-bold text-white tracking-wide">{userData?.profile?.name || "User Name"}</h3>
-          <p className="text-xs text-slate-400 font-medium bg-slate-800 px-2 py-0.5 rounded-full inline-block mt-1">Resume Builder</p>
+          <h3 className="font-bold text-white tracking-tight text-sm">{userData?.profile?.name || "User Name"}</h3>
+          <p className="text-[10px] text-slate-400 font-medium bg-slate-800 px-2 py-0.5 rounded-full inline-block mt-0.5">Resume Builder</p>
         </div>
       </div>
 
@@ -40,17 +41,17 @@ export default function Sidebar({ activeTab, setActiveTab, userData }) {
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`group relative flex items-center justify-between w-full p-4 rounded-2xl transition-all duration-300 ease-out border cursor-pointer
+              className={`group relative flex items-center justify-between w-full px-3 py-2.5 rounded-xl transition-all duration-300 ease-out border cursor-pointer
                 ${isActive
                   ? "bg-blue-600/10 border-blue-500/50 shadow-lg shadow-blue-500/10 scale-100 ring-1 ring-blue-500/20"
                   : "bg-transparent border-transparent hover:bg-white/5 hover:border-white/10 hover:shadow-sm text-slate-400"
                 }`}
             >
-              <div className="flex items-center gap-4">
-                <div className={`p-2.5 rounded-xl transition-colors duration-300 ${isActive ? "bg-blue-600/20" : "bg-slate-800/50 group-hover:bg-slate-800"}`}>
-                  <Icon className={`w-5 h-5 ${isActive ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300"}`} />
+              <div className="flex items-center gap-3">
+                <div className={`p-2 rounded-lg transition-colors duration-300 ${isActive ? "bg-blue-600/20" : "bg-slate-800/50 group-hover:bg-slate-800"}`}>
+                  <Icon className={`w-4 h-4 ${isActive ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300"}`} />
                 </div>
-                <span className={`font-semibold tracking-wide ${isActive ? "text-white" : "text-slate-400 group-hover:text-white"}`}>
+                <span className={`font-semibold text-xs tracking-tight ${isActive ? "text-white" : "text-slate-400 group-hover:text-white"}`}>
                   {label}
                 </span>
               </div>

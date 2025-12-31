@@ -1,12 +1,22 @@
 import React, { useState } from "react";
 import { Download, Printer, LayoutTemplate } from "lucide-react";
 import ResumePreview from "./ResumePreview";
-
 export default function GenerateResume({ data }) {
-    const [template, setTemplate] = useState('modern');
+    const [template, setTemplate] = useState('template1');
 
-    const handlePrint = () => {
-        window.print();
+    const handleDownload = async () => {
+        const element = document.getElementById('resume-pdf-target');
+        const opt = {
+            margin: 0,
+            filename: `Resume_${data.profile?.name || 'User'}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: ['avoid-all'] }
+        };
+
+        const html2pdf = (await import('html2pdf.js')).default;
+        html2pdf().set(opt).from(element).save();
     };
 
     return (
@@ -23,25 +33,31 @@ export default function GenerateResume({ data }) {
                     {/* Template Selector */}
                     <div className="flex items-center gap-2 bg-slate-800/50 p-1.5 rounded-xl border border-white/5 relative z-10">
                         <button
-                            onClick={() => setTemplate('modern')}
-                            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${template === 'modern' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25 ring-1 ring-blue-500/50' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                            onClick={() => setTemplate('template1')}
+                            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${template === 'template1' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25 ring-1 ring-blue-500/50' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
                         >
                             Modern
                         </button>
                         <button
-                            onClick={() => setTemplate('classic')}
-                            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${template === 'classic' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25 ring-1 ring-blue-500/50' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                            onClick={() => setTemplate('template2')}
+                            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${template === 'template2' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25 ring-1 ring-blue-500/50' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
                         >
-                            Classic
+                            Minimal
+                        </button>
+                        <button
+                            onClick={() => setTemplate('template3')}
+                            className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${template === 'template3' ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25 ring-1 ring-blue-500/50' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                        >
+                            Grid
                         </button>
                     </div>
 
                     <button
-                        onClick={handlePrint}
-                        className="bg-white text-blue-900 hover:bg-blue-50 px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all print:hidden relative z-10"
+                        onClick={handleDownload}
+                        className="bg-white text-blue-900 hover:bg-blue-50 px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all relative z-10"
                     >
-                        <Printer size={18} />
-                        Print / Save PDF
+                        <Download size={18} />
+                        Download PDF
                     </button>
                 </div>
             </div>
@@ -53,9 +69,11 @@ export default function GenerateResume({ data }) {
                 </div>
             </div>
 
-            {/* Print Only Container (Hidden on Screen, Visible on Print) */}
-            <div className="hidden print:block fixed inset-0 z-[9999] bg-white">
-                <ResumePreview data={data} template={template} />
+            {/* Hidden Container for PDF Generation (Unscaled) */}
+            <div className="fixed left-[-9999px] top-0 overflow-hidden">
+                <div id="pdf-wrapper" className="w-[210mm] h-[297mm]">
+                    <ResumePreview data={data} template={template} id="resume-pdf-target" />
+                </div>
             </div>
         </div>
     );

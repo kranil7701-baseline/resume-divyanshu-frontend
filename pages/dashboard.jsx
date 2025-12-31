@@ -109,23 +109,23 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F3F4F6] flex items-center justify-center">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium animate-pulse">Loading your workspace...</p>
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-400 font-medium animate-pulse">Loading your workspace...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans text-gray-900 selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen bg-slate-950 font-sans text-slate-100 selection:bg-blue-500/30 selection:text-blue-200">
 
       {/* Background decoration */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl mix-blend-multiply opacity-70 animate-blob"></div>
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-200/20 rounded-full blur-3xl mix-blend-multiply opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-pink-200/20 rounded-full blur-3xl mix-blend-multiply opacity-70 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl mix-blend-screen opacity-50 animate-blob"></div>
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl mix-blend-screen opacity-50 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl mix-blend-screen opacity-50 animate-blob animation-delay-4000"></div>
       </div>
 
       <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -133,10 +133,10 @@ export default function Dashboard() {
         {/* Header */}
         <header className="py-6 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
           <div>
-            <h1 className="text-3xl font-extra-bold bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 bg-clip-text text-transparent tracking-tight">
+            <h1 className="text-4xl font-extrabold text-white tracking-tight">
               Dashboard
             </h1>
-            <p className="text-gray-500 mt-1">Welcome back, {user?.name || "Creator"}</p>
+            <p className="text-slate-400 mt-2 text-lg">Welcome back, <span className="text-blue-400">{user?.name || "Creator"}</span></p>
           </div>
 
           {/* <div className="flex items-center gap-3">
@@ -158,17 +158,17 @@ export default function Dashboard() {
 
           {/* Main Content Area */}
           <main className="flex-1 min-w-0">
-            <div className="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/50 shadow-xl p-6 sm:p-10 min-h-[600px] transition-all duration-300">
+            <div className="bg-transparent rounded-3xl min-h-[600px] transition-all duration-300">
 
               {/* Content Header */}
-              <div className="mb-8 pb-4 border-b border-gray-100 flex justify-between items-center">
+              <div className="mb-8 pb-4 border-b border-white/10 flex justify-between items-center">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-800 capitalize">{activeTab}</h2>
-                  <p className="text-gray-500 text-sm mt-1">Manage your {activeTab} information</p>
+                  <h2 className="text-3xl font-bold text-white capitalize">{activeTab}</h2>
+                  <p className="text-slate-400 text-sm mt-1">Manage your {activeTab} information</p>
                 </div>
                 {isSaving && (
-                  <span className="text-sm font-medium text-blue-600 flex items-center gap-2 bg-blue-50 px-3 py-1 rounded-full">
-                    <span className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
+                  <span className="text-sm font-medium text-blue-400 flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full">
+                    <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
                     Saving...
                   </span>
                 )}

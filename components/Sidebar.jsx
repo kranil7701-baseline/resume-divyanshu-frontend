@@ -15,20 +15,20 @@ export default function Sidebar({ activeTab, setActiveTab, userData }) {
   ];
 
   return (
-    <aside className="lg:w-80 w-full flex-shrink-0 bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl rounded-3xl p-6 flex flex-col gap-6 sticky top-24 h-fit">
+    <aside className="lg:w-80 w-full flex-shrink-0 bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-xl rounded-3xl p-6 flex flex-col gap-6 sticky top-24 h-fit transition-all hover:bg-slate-900/90">
 
       {/* Profile Summary Header (Mini) */}
       <div className="flex items-center gap-4 px-2">
-        <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+        <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold text-lg shadow-lg ring-2 ring-white/10">
           {userData?.profile?.name ? userData.profile.name[0] : "U"}
         </div>
         <div>
-          <h3 className="font-bold text-gray-800">{userData?.profile?.name || "User Name"}</h3>
-          <p className="text-xs text-gray-500 font-medium">Resume Builder</p>
+          <h3 className="font-bold text-white tracking-wide">{userData?.profile?.name || "User Name"}</h3>
+          <p className="text-xs text-slate-400 font-medium bg-slate-800 px-2 py-0.5 rounded-full inline-block mt-1">Resume Builder</p>
         </div>
       </div>
 
-      <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
       {/* Navigation */}
       <nav className="flex flex-col gap-2">
@@ -42,22 +42,22 @@ export default function Sidebar({ activeTab, setActiveTab, userData }) {
               onClick={() => setActiveTab(id)}
               className={`group relative flex items-center justify-between w-full p-4 rounded-2xl transition-all duration-300 ease-out border cursor-pointer
                 ${isActive
-                  ? "bg-white border-blue-100 shadow-lg shadow-blue-500/10 scale-100 ring-1 ring-blue-500/10"
-                  : "bg-transparent border-transparent hover:bg-white/50 hover:border-gray-100 hover:shadow-sm text-gray-600"
+                  ? "bg-blue-600/10 border-blue-500/50 shadow-lg shadow-blue-500/10 scale-100 ring-1 ring-blue-500/20"
+                  : "bg-transparent border-transparent hover:bg-white/5 hover:border-white/10 hover:shadow-sm text-slate-400"
                 }`}
             >
               <div className="flex items-center gap-4">
-                <div className={`p-2.5 rounded-xl transition-colors duration-300 ${isActive ? bg : "bg-gray-50 group-hover:bg-white"}`}>
-                  <Icon className={`w-5 h-5 ${isActive ? color : "text-gray-400 group-hover:text-gray-600"}`} />
+                <div className={`p-2.5 rounded-xl transition-colors duration-300 ${isActive ? "bg-blue-600/20" : "bg-slate-800/50 group-hover:bg-slate-800"}`}>
+                  <Icon className={`w-5 h-5 ${isActive ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300"}`} />
                 </div>
-                <span className={`font-semibold tracking-wide ${isActive ? "text-gray-900" : "text-gray-500 group-hover:text-gray-700"}`}>
+                <span className={`font-semibold tracking-wide ${isActive ? "text-white" : "text-slate-400 group-hover:text-white"}`}>
                   {label}
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
                 {count > 0 && (
-                  <span className={`text-xs font-bold px-2 py-1 rounded-full ${isActive ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-400 group-hover:bg-gray-200"}`}>
+                  <span className={`text-xs font-bold px-2 py-1 rounded-full ${isActive ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400 group-hover:bg-slate-700"}`}>
                     {count}
                   </span>
                 )}

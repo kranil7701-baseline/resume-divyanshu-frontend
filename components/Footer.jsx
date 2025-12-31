@@ -24,7 +24,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-slate-950 text-white border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Section */}
@@ -35,7 +35,7 @@ const Footer = () => {
               </div>
               <span className="text-xl font-bold">ResumeCraft</span>
             </Link>
-            <p className="text-gray-400 mb-4 text-sm">
+            <p className="text-slate-400 mb-4 text-sm">
               Build professional resumes that get you hired. Fast, easy, and effective.
             </p>
           </div>
@@ -48,7 +48,7 @@ const Footer = () => {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-white transition duration-300 text-sm"
+                    className="text-slate-400 hover:text-white transition duration-300 text-sm"
                   >
                     {link.label}
                   </Link>
@@ -65,7 +65,7 @@ const Footer = () => {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-white transition duration-300 text-sm"
+                    className="text-slate-400 hover:text-white transition duration-300 text-sm"
                   >
                     {link.label}
                   </Link>
@@ -82,7 +82,7 @@ const Footer = () => {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-white transition duration-300 text-sm"
+                    className="text-slate-400 hover:text-white transition duration-300 text-sm"
                   >
                     {link.label}
                   </Link>
@@ -93,9 +93,9 @@ const Footer = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-          <div className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} ResumeCraft. All rights reserved. 
+        <div className="border-t border-white/10 mt-8 pt-8 text-center">
+          <div className="text-slate-400 text-sm">
+            © {new Date().getFullYear()} ResumeCraft. All rights reserved.
             Helping job seekers since 2024.
           </div>
         </div>

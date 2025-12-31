@@ -6,7 +6,7 @@ export default function Steps() {
     ];
 
     return (
-        <section className="py-24 bg-gray-900 text-white relative overflow-hidden">
+        <section className="py-24 bg-transparent text-white relative overflow-hidden">
             {/* Background Gradients */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[100px] pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[100px] pointer-events-none" />
@@ -16,17 +16,17 @@ export default function Steps() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
                     {/* Connecting Line (Desktop) */}
-                    <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-gray-800 z-0"></div>
+                    <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-slate-700 z-0"></div>
 
                     {steps.map((s, i) => (
                         <div key={i} className="relative z-10 text-center">
-                            <div className="w-24 h-24 mx-auto bg-gray-800 rounded-2xl flex items-center justify-center text-3xl font-bold mb-8 border border-gray-700 shadow-lg group hover:border-blue-500 hover:bg-blue-600/10 transition-colors duration-300">
+                            <div className="w-24 h-24 mx-auto bg-slate-800 rounded-2xl flex items-center justify-center text-3xl font-bold mb-8 border border-white/10 shadow-lg group hover:border-blue-500 hover:bg-slate-700/50 transition-colors duration-300">
                                 <span className="bg-gradient-to-br from-blue-400 to-purple-400 bg-clip-text text-transparent">
                                     {s.num}
                                 </span>
                             </div>
                             <h3 className="text-xl font-bold mb-4">{s.title}</h3>
-                            <p className="text-gray-400">{s.desc}</p>
+                            <p className="text-slate-400">{s.desc}</p>
                         </div>
                     ))}
                 </div>

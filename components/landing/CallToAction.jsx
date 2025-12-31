@@ -16,7 +16,7 @@ export default function CallToAction() {
                 </p>
                 <Link
                     href="/dashboard"
-                    className="inline-block px-10 py-5 bg-white text-blue-600 rounded-xl font-bold text-lg shadow-xl hover:bg-gray-50 hover:scale-105 transition-all duration-300"
+                    className="inline-block px-10 py-5 bg-white text-blue-900 rounded-xl font-bold text-lg shadow-xl hover:bg-blue-50 hover:scale-105 transition-all duration-300"
                 >
                     Create Resume Now
                 </Link>

@@ -165,11 +165,12 @@ export default function UserResume({ data }) {
             </div>
 
             {/* Actions Area */}
-            <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="bg-slate-900/50 backdrop-blur-md rounded-3xl p-8 border border-white/10 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-violet-600/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/2" />
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
                     <div>
-                        <h3 className="text-xl font-bold text-gray-800">Ready to Generate?</h3>
-                        <p className="text-gray-500 mt-1">
+                        <h3 className="text-xl font-bold text-white">Ready to Generate?</h3>
+                        <p className="text-slate-400 mt-1">
                             We will send your detailed profile information to the UseResume engine.
                         </p>
                     </div>
@@ -180,8 +181,8 @@ export default function UserResume({ data }) {
                         className={`
                             px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-3 transition-all transform hover:-translate-y-1 shadow-lg
                             ${loading
-                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none translate-y-0'
-                                : 'bg-gray-900 text-white hover:bg-black hover:shadow-gray-900/20 active:scale-95'
+                                ? 'bg-slate-800 text-slate-500 cursor-not-allowed shadow-none translate-y-0'
+                                : 'bg-white text-blue-900 hover:bg-blue-50 hover:shadow-blue-500/20 active:scale-95'
                             }
                         `}
                     >
@@ -201,25 +202,25 @@ export default function UserResume({ data }) {
 
                 {/* Status Feedback */}
                 {error && (
-                    <div className="mt-8 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-start gap-3 text-red-700 animate-in slide-in-from-top-2">
-                        <AlertCircle className="shrink-0 mt-0.5" />
+                    <div className="mt-8 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-start gap-3 text-red-200 animate-in slide-in-from-top-2 relative z-10">
+                        <AlertCircle className="shrink-0 mt-0.5 text-red-400" />
                         <div>
-                            <p className="font-bold">Generation Failed</p>
-                            <p className="text-sm opacity-90">{error}</p>
-                            <p className="text-xs mt-2 opacity-75">Please check your internet connection or verify the API service status.</p>
+                            <p className="font-bold text-red-100">Generation Failed</p>
+                            <p className="text-sm opacity-90 text-red-200/80">{error}</p>
+                            <p className="text-xs mt-2 opacity-75 text-red-300">Please check your internet connection or verify the API service status.</p>
                         </div>
                     </div>
                 )}
 
                 {result && (
-                    <div className="mt-8 p-6 bg-green-50 border border-green-100 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 animate-in slide-in-from-top-2">
+                    <div className="mt-8 p-6 bg-green-500/10 border border-green-500/20 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 animate-in slide-in-from-top-2 relative z-10">
                         <div className="flex items-center gap-4">
-                            <div className="bg-green-100 p-3 rounded-full text-green-600">
+                            <div className="bg-green-500/20 p-3 rounded-full text-green-400">
                                 <CheckCircle size={32} />
                             </div>
                             <div>
-                                <h4 className="text-lg font-bold text-green-800">Resume Generated Successfully!</h4>
-                                <p className="text-green-700">Your professional resume is ready.</p>
+                                <h4 className="text-lg font-bold text-white">Resume Generated Successfully!</h4>
+                                <p className="text-green-200/80">Your professional resume is ready.</p>
                             </div>
                         </div>
 
@@ -237,7 +238,7 @@ export default function UserResume({ data }) {
 
                         {/* Fallback Display */}
                         {!(result.file_url || result.pdfUrl) && (
-                            <div className="bg-white p-4 rounded-xl border border-green-200 text-xs font-mono overflow-auto max-w-full">
+                            <div className="bg-slate-900/50 p-4 rounded-xl border border-white/10 text-xs font-mono overflow-auto max-w-full text-slate-300">
                                 {JSON.stringify(result, null, 2)}
                             </div>
                         )}

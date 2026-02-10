@@ -39,6 +39,14 @@ body {
   min-height: 100vh;
 }
 
+button, 
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  cursor: pointer;
+}
+
 @layer utilities {
   .glass {
     @apply bg-slate-900/70 backdrop-blur-lg border border-white/10;

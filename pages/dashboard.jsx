@@ -14,6 +14,8 @@ import GenerateResume from '@/components/GenerateResume';
 import UserResume from '@/components/UserResume';
 import Sidebar from '@/components/Sidebar';
 import SocialsSection from '@/components/Socials';
+import SubscriptionSection from '@/components/Subscription';
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('profile');
@@ -109,9 +111,27 @@ export default function Dashboard() {
         [section]: data
       }));
 
-      return await response.json();
+      const payload = await response.json();
+      toast.success(`${section.charAt(0).toUpperCase() + section.slice(1)} updated successfully!`, {
+        style: {
+          background: '#1e293b',
+          color: '#fff',
+          border: '1px solid rgba(255,255,255,0.1)',
+          fontSize: '13px'
+        }
+      });
+
+      return payload;
     } catch (error) {
       console.error('Error saving data:', error);
+      toast.error(`Failed to save ${section}. Please try again.`, {
+        style: {
+          background: '#1e293b',
+          color: '#fff',
+          border: '1px solid rgba(255,255,255,0.1)',
+          fontSize: '13px'
+        }
+      });
       throw error;
     } finally {
       setIsSaving(false);
@@ -163,6 +183,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#05060f] font-sans text-slate-100 selection:bg-indigo-500/30 selection:text-indigo-200">
+      <Toaster position="top-right" reverseOrder={false} />
       {/* Dynamic Background Elements */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/20 rounded-full blur-[120px] mix-blend-screen animate-pulse"></div>
@@ -196,15 +217,26 @@ export default function Dashboard() {
                     <span className="text-[10px] font-bold text-indigo-300 uppercase letter tracking-wider">Syncing</span>
                   </div>
                 )}
-                <div className="h-8 w-px bg-white/10 mx-2" />
-                <div className="flex items-center gap-3">
-                  <div className="text-right hidden sm:block">
-                    <p className="text-xs font-bold text-white leading-none">{user?.name || "User"}</p>
-                    <p className="text-[10px] text-slate-500 mt-1">Creator Account</p>
+
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-3">
+                    <div className="text-right hidden sm:block">
+                      <p className="text-xs font-bold text-white leading-none">{user?.name || "User"}</p>
+                      <p className="text-[10px] text-slate-500 mt-1">Creator Account</p>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-slate-800 border-2 border-white/5 flex items-center justify-center overflow-hidden ring-2 ring-indigo-500/20 shadow-lg">
+                      <span className="text-sm font-bold text-indigo-400 uppercase">{user?.name ? user.name[0] : "U"}</span>
+                    </div>
                   </div>
-                  <div className="w-10 h-10 rounded-full bg-slate-800 border-2 border-white/5 flex items-center justify-center overflow-hidden ring-2 ring-indigo-500/20">
-                    <span className="text-sm font-bold text-indigo-400 uppercase">{user?.name ? user.name[0] : "U"}</span>
-                  </div>
+
+                  <div className="h-8 w-px bg-white/10" />
+
+                  <button
+                    onClick={handleLogout}
+                    className="text-[11px] font-bold uppercase tracking-widest text-slate-500 hover:text-red-400 transition-all active:scale-95 py-2"
+                  >
+                    Sign Out
+                  </button>
                 </div>
               </div>
             </header>
@@ -229,6 +261,7 @@ export default function Dashboard() {
                   {activeTab === 'projects' && <ProjectsSection data={userData.projects || []} onSave={saveToDatabase} isSaving={isSaving} />}
                   {activeTab === 'social' && <SocialsSection data={userData.social || []} onSave={saveToDatabase} isSaving={isSaving} />}
                   {activeTab === 'certifications' && <CertificationsSection data={userData.certifications || []} onSave={saveToDatabase} isSaving={isSaving} />}
+                  {activeTab === 'subscription' && <SubscriptionSection />}
                   {activeTab === 'generate' && <GenerateResume data={userData} />}
                   {activeTab === 'userresume' && <UserResume data={userData} />}
                 </div>

@@ -1,6 +1,5 @@
 // components/Sidebar.js
-import React from "react";
-import { User, Layers, Briefcase, BookOpen, Star, Award, ChevronRight, FileText, Zap, Globe, LogOut } from "lucide-react";
+import { User, Layers, Briefcase, BookOpen, Star, Award, ChevronRight, FileText, Zap, Globe, LogOut, CreditCard } from "lucide-react";
 
 export default function Sidebar({ activeTab, setActiveTab, userData, handleLogout }) {
   const items = [
@@ -11,6 +10,7 @@ export default function Sidebar({ activeTab, setActiveTab, userData, handleLogou
     { id: "projects", label: "Projects", Icon: Layers, color: "from-pink-500 to-rose-500" },
     { id: "social", label: "Social", Icon: Globe, color: "from-cyan-400 to-blue-500" },
     { id: "certifications", label: "Certifications", Icon: Award, color: "from-indigo-400 to-violet-500" },
+    { id: "subscription", label: "Pricing", Icon: CreditCard, color: "from-amber-400 to-yellow-600" },
     { id: "userresume", label: "Preview", Icon: Zap, color: "from-orange-400 to-red-500" },
     { id: "generate", label: "Build", Icon: FileText, color: "from-slate-400 to-slate-600" },
   ];
@@ -64,17 +64,13 @@ export default function Sidebar({ activeTab, setActiveTab, userData, handleLogou
         })}
       </nav>
 
-      <div className="w-10 h-px bg-white/10" />
+      <div className="w-10 h-px bg-white/10 shrink-0" />
 
-      {/* Profile & Logout */}
-      <div className="flex flex-col gap-6 pb-4">
-        <button
-          onClick={handleLogout}
-          className="group p-3 rounded-2xl bg-red-500/5 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all text-slate-500 hover:text-red-400 shadow-sm"
-          title="Sign Out"
-        >
-          <LogOut className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" />
-        </button>
+      {/* Profile Info (Icon only, no logout) */}
+      <div className="flex flex-col gap-6 pb-4 shrink-0">
+        <div className="w-10 h-10 rounded-full bg-slate-800 border-2 border-white/5 flex items-center justify-center overflow-hidden ring-2 ring-indigo-500/20 shadow-lg">
+          <span className="text-sm font-bold text-indigo-400 uppercase">{userData?.name ? userData.name[0] : userData?.profile?.name ? userData.profile.name[0] : "U"}</span>
+        </div>
       </div>
 
       <style jsx>{`

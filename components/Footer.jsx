@@ -11,15 +11,15 @@ const Footer = () => {
     ],
     resources: [
       { label: 'Blog', href: '/blog' },
-      { label: 'Career Advice', href: '/advice' },
-      { label: 'Resume Tips', href: '/tips' },
+      { label: 'Career Advice', href: '/career-advice' },
+      { label: 'Resume Tips', href: '/resume-tips' },
       { label: 'FAQ', href: '/faq' },
     ],
     company: [
       { label: 'About Us', href: '/about' },
       { label: 'Contact', href: '/contact' },
-      { label: 'Privacy Policy', href: '/privacy' },
-      { label: 'Terms of Service', href: '/terms' },
+      { label: 'Privacy Policy', href: '/privacy-policy' },
+      { label: 'Terms of Service', href: '/terms-of-service' },
     ],
   };
 

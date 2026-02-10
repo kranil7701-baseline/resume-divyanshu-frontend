@@ -50,6 +50,13 @@ export default function FAQ() {
                         </div>
                     ))}
                 </div>
+
+                <div className="mt-12 text-center">
+                    <a href="/faq" className="text-blue-400 hover:text-blue-300 font-bold text-sm uppercase tracking-widest flex items-center justify-center gap-2 group">
+                        View All FAQs
+                        <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </a>
+                </div>
             </div>
         </section>
     );

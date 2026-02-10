@@ -36,7 +36,7 @@ export default function Hero() {
                             Build My Resume Free
                         </Link>
                         <Link
-                            href="/"
+                            href="/examples"
                             className="px-8 py-4 bg-white/5 text-white border border-white/10 rounded-xl font-bold hover:bg-white/10 hover:border-white/20 transition-all duration-300"
                         >
                             View Examples

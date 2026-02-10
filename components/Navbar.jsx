@@ -1,7 +1,7 @@
 // components/Navbar.js (Updated for resume builder)
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -9,6 +9,18 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Error parsing user in Navbar:", error);
+      }
+    }
+  }, []);
 
   // Updated navigation items for resume builder
   const navItems = [
@@ -17,6 +29,13 @@ const Navbar = () => {
     { label: 'Pricing', href: '/' },
     { label: 'Blog', href: '/' },
   ];
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+    router.push('/signin');
+  };
 
   return (
     <nav className="fixed w-full z-50 transition-all duration-300 bg-slate-900/80 backdrop-blur-md border-b border-white/10">
@@ -49,12 +68,28 @@ const Navbar = () => {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <button onClick={() => router.push('/signin')} className="text-gray-300 cursor-pointer hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300">
-              Sign In
-            </button>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
-              Build Your Resume
-            </button>
+            {user ? (
+              <div className="flex items-center gap-4">
+                <Link href="/dashboard" className="text-gray-300 hover:text-white font-medium">
+                  Hello, {user.name || user.username || "User"}
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-600/10 hover:bg-red-600/20 text-red-500 border border-red-600/20 px-4 py-2 rounded-md text-sm font-medium transition duration-300"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <>
+                <button onClick={() => router.push('/signin')} className="text-gray-300 cursor-pointer hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300">
+                  Sign In
+                </button>
+                <button onClick={() => router.push('/signup')} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
+                  Build Your Resume
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -99,12 +134,35 @@ const Navbar = () => {
             </Link>
           ))}
           <div className="pt-4 pb-2 border-t border-gray-200 space-y-2">
-            <button onClick={() => router.push('/signin')} className="w-full text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-base font-medium text-left transition duration-300">
-              Sign In
-            </button>
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-base font-medium transition duration-300">
-              Build Your Resume
-            </button>
+            {user ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setIsOpen(false)}
+                  className="w-full block px-3 py-2 text-base font-medium text-gray-300 hover:text-white"
+                >
+                  Dashboard ({user.name})
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsOpen(false);
+                  }}
+                  className="w-full text-left px-3 py-2 text-base font-medium text-red-400 hover:text-red-300"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => router.push('/signin')} className="w-full text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-base font-medium text-left transition duration-300">
+                  Sign In
+                </button>
+                <button onClick={() => router.push('/signup')} className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-base font-medium transition duration-300">
+                  Build Your Resume
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

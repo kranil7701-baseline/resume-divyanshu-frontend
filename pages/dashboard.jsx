@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { API } from '@/config';
+'use client';
 
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { API } from '@/config';
 import ProfileSection from '@/components/ProfileSection';
 import SkillsSection from '@/components/Skills';
 import ExperienceSection from '@/components/Experience';
@@ -17,6 +18,7 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('profile');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
   const [user, setUser] = useState(null);
 
@@ -32,8 +34,25 @@ export default function Dashboard() {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Error parsing stored user data:", error);
+        localStorage.removeItem("user");
+      }
+    }
+  }, []);
+
+  // Check authentication
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    // Check if token exists and is not the string "undefined"
+    if (token && token !== 'undefined' && token !== 'null') {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+      setIsLoading(false);
     }
   }, []);
 
@@ -91,6 +110,38 @@ export default function Dashboard() {
       setIsSaving(false);
     }
   };
+
+  // Show sign-in prompt if not authenticated
+  if (!isAuthenticated && !isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-indigo-950 flex items-center justify-center px-4">
+        <div className="max-w-md w-full bg-slate-800 rounded-2xl shadow-2xl border border-white/10 p-8 text-center">
+          <div className="w-20 h-20 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg className="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-3">Authentication Required</h2>
+          <p className="text-slate-400 mb-6">Please sign in to access your dashboard and manage your resume.</p>
+          <button
+            onClick={() => router.push('/signin')}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+            </svg>
+            Sign In to Continue
+          </button>
+          <p className="text-slate-500 text-sm mt-4">
+            Don't have an account?{' '}
+            <button onClick={() => router.push('/signup')} className="text-blue-400 hover:text-blue-300 font-medium">
+              Sign up here
+            </button>
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

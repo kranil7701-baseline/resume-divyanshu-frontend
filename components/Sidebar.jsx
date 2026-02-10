@@ -10,7 +10,7 @@ export default function Sidebar({ activeTab, setActiveTab, userData, handleLogou
     { id: "education", label: "Education", Icon: BookOpen, color: "from-emerald-400 to-teal-500" },
     { id: "projects", label: "Projects", Icon: Layers, color: "from-pink-500 to-rose-500" },
     { id: "social", label: "Social", Icon: Globe, color: "from-cyan-400 to-blue-500" },
-    { id: "certifications", label: "Awards", Icon: Award, color: "from-indigo-400 to-violet-500" },
+    { id: "certifications", label: "Certifications", Icon: Award, color: "from-indigo-400 to-violet-500" },
     { id: "userresume", label: "Preview", Icon: Zap, color: "from-orange-400 to-red-500" },
     { id: "generate", label: "Build", Icon: FileText, color: "from-slate-400 to-slate-600" },
   ];
@@ -18,16 +18,16 @@ export default function Sidebar({ activeTab, setActiveTab, userData, handleLogou
   return (
     <aside className="w-24 lg:w-[100px] h-screen bg-white/5 border-r border-white/10 flex flex-col items-center py-8 gap-8 backdrop-blur-xl relative z-20 transition-all duration-300">
       {/* Brand Icon */}
-      <div className="relative group">
+      <div className="relative group shrink-0">
         <div className="h-14 w-14 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(79,70,229,0.3)] group-hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transition-all transform group-hover:rotate-12">
           <Zap className="text-white w-7 h-7 fill-white/20" />
         </div>
       </div>
 
-      <div className="w-10 h-px bg-white/10" />
+      <div className="w-10 h-px bg-white/10 shrink-0" />
 
       {/* Navigation */}
-      <nav className="flex flex-col gap-5 flex-grow overflow-y-auto no-scrollbar py-4 px-2">
+      <nav className="flex flex-col gap-5 flex-grow overflow-y-auto custom-sidebar-scrollbar py-4 px-2 w-full">
         {items.map(({ id, label, Icon, color }) => {
           const isActive = activeTab === id;
 
@@ -78,12 +78,18 @@ export default function Sidebar({ activeTab, setActiveTab, userData, handleLogou
       </div>
 
       <style jsx>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
+        .custom-sidebar-scrollbar::-webkit-scrollbar {
+          width: 3px;
         }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
+        .custom-sidebar-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-sidebar-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+        }
+        .custom-sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.1);
         }
       `}</style>
     </aside>

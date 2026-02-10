@@ -52,7 +52,9 @@ export default function SignIn() {
         setError(data.error || 'Google sign in failed');
       }
     } catch (err) {
-      setError('An error occurred during Google sign in.');
+      setError(err.message);
+      console.log(err);
+
     } finally {
       setLoading(false);
     }

@@ -1,8 +1,8 @@
 // components/Sidebar.js
 import React from "react";
-import { User, Layers, Briefcase, BookOpen, Star, Award, ChevronRight, FileText, Zap, Globe } from "lucide-react";
+import { User, Layers, Briefcase, BookOpen, Star, Award, ChevronRight, FileText, Zap, Globe, LogOut } from "lucide-react";
 
-export default function Sidebar({ activeTab, setActiveTab, userData }) {
+export default function Sidebar({ activeTab, setActiveTab, userData, handleLogout }) {
   const items = [
     { id: "profile", label: "Profile", Icon: User, color: "text-blue-500", bg: "bg-blue-50" },
     { id: "skills", label: "Skills", Icon: Star, color: "text-yellow-500", bg: "bg-yellow-50" },
@@ -32,7 +32,7 @@ export default function Sidebar({ activeTab, setActiveTab, userData }) {
       <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
       {/* Navigation */}
-      <nav className="flex flex-col gap-2">
+      <nav className="flex flex-col gap-2 flex-grow">
         {items.map(({ id, label, Icon, color, bg }) => {
           const isActive = activeTab === id;
           const count = userData && Array.isArray(userData[id]) ? userData[id].length : (userData?.profile && id === 'profile' ? 1 : 0);
@@ -73,6 +73,19 @@ export default function Sidebar({ activeTab, setActiveTab, userData }) {
           );
         })}
       </nav>
+
+      <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+      {/* Logout Button */}
+      <button
+        onClick={handleLogout}
+        className="group relative flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all duration-300 ease-out border border-transparent hover:bg-red-500/10 hover:border-red-500/20 text-slate-400 hover:text-red-400 cursor-pointer"
+      >
+        <div className="p-2 rounded-lg bg-slate-800/50 group-hover:bg-red-500/20 transition-colors duration-300">
+          <LogOut className="w-4 h-4 text-slate-500 group-hover:text-red-400" />
+        </div>
+        <span className="font-semibold text-xs tracking-tight">Logout</span>
+      </button>
     </aside>
   );
 }

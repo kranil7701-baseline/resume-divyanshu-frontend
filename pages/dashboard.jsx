@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { API } from '@/config';
+import { signOut } from 'next-auth/react';
 import ProfileSection from '@/components/ProfileSection';
 import SkillsSection from '@/components/Skills';
 import ExperienceSection from '@/components/Experience';
@@ -21,6 +22,12 @@ export default function Dashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
   const [user, setUser] = useState(null);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    signOut({ callbackUrl: '/signin' });
+  };
 
   const [userData, setUserData] = useState({
     profile: {},
@@ -171,7 +178,7 @@ export default function Dashboard() {
         </header>
 
         <div className="flex flex-col lg:flex-row gap-6 py-4">
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} userData={userData} />
+          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} userData={userData} handleLogout={handleLogout} />
 
           <main className="flex-1 min-w-0">
             <div className="bg-transparent rounded-3xl min-h-[500px] transition-all duration-300">

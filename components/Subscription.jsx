@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { Check, CreditCard, Shield, Zap, QrCode, Smartphone } from "lucide-react";
+import { Check, CreditCard, Shield, Zap, QrCode, Smartphone, X, Loader2 } from "lucide-react";
 
 export default function Subscription() {
     const [selectedPlan, setSelectedPlan] = useState("monthly");
+    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+    const [paymentMethod, setPaymentMethod] = useState(null);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     const plans = [
         {
@@ -37,30 +40,20 @@ export default function Subscription() {
         }
     ];
 
-    const handlePayment = async (method) => {
-        try {
-            // In production, this would call your backend to create an Order/Session
-            // and then open the respective gateway hosted page or modal
-            console.log(`Initializing ${method} payment flow for plan: ${selectedPlan}`);
+    const handlePaymentInitiation = (method) => {
+        setPaymentMethod(method);
+        setIsPaymentModalOpen(true);
+        setIsProcessing(true);
+        // Simulate gateway initialization
+        setTimeout(() => {
+            setIsProcessing(false);
+        }, 1500);
+    };
 
-            if (method === "Stripe") {
-                // Example Stripe Integration:
-                // const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-                // await stripe.redirectToCheckout({ sessionId: YOUR_BACKEND_SESSION_ID });
-                window.location.href = `/api/payment/stripe?plan=${selectedPlan}`; // Placeholder redirect
-            } else if (method === "Razorpay") {
-                // Example Razorpay Integration:
-                // const options = { key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, amount: '...', ... };
-                // const rzp = new window.Razorpay(options);
-                // rzp.open();
-                alert("Initializing Razorpay Secure Checkout...");
-            } else if (method === "UPI") {
-                // Direct to UPI/QR Scanner page
-                alert("Generating dynamic UPI QR Code for instant payment...");
-            }
-        } catch (error) {
-            console.error("Payment initialization failed:", error);
-        }
+    const closePaymentModal = () => {
+        setIsPaymentModalOpen(false);
+        setPaymentMethod(null);
+        setIsProcessing(false);
     };
 
     return (
@@ -135,7 +128,7 @@ export default function Subscription() {
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full md:w-auto">
                         <button
-                            onClick={() => handlePayment("Stripe")}
+                            onClick={() => handlePaymentInitiation("Stripe")}
                             className="group p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-indigo-500/50 transition-all flex flex-col items-center gap-2"
                         >
                             <CreditCard size={20} className="text-indigo-400 group-hover:scale-110 transition-transform" />
@@ -143,7 +136,7 @@ export default function Subscription() {
                         </button>
 
                         <button
-                            onClick={() => handlePayment("Razorpay")}
+                            onClick={() => handlePaymentInitiation("Razorpay")}
                             className="group p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-blue-500/50 transition-all flex flex-col items-center gap-2"
                         >
                             <Zap size={20} className="text-blue-400 group-hover:scale-110 transition-transform" />
@@ -151,7 +144,7 @@ export default function Subscription() {
                         </button>
 
                         <button
-                            onClick={() => handlePayment("Cards")}
+                            onClick={() => handlePaymentInitiation("Mastercard / Visa")}
                             className="group p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-emerald-500/50 transition-all flex flex-col items-center gap-2"
                         >
                             <Smartphone size={20} className="text-emerald-400 group-hover:scale-110 transition-transform" />
@@ -159,7 +152,7 @@ export default function Subscription() {
                         </button>
 
                         <button
-                            onClick={() => handlePayment("UPI")}
+                            onClick={() => handlePaymentInitiation("UPI / QR")}
                             className="group p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-orange-500/50 transition-all flex flex-col items-center gap-2"
                         >
                             <QrCode size={20} className="text-orange-400 group-hover:scale-110 transition-transform" />
@@ -175,6 +168,89 @@ export default function Subscription() {
                     <img src="https://upload.wikimedia.org/wikipedia/commons/2/29/Amazon_Pay_logo.svg" alt="Amazon Pay" className="h-5" />
                 </div>
             </div>
+
+            {/* Mock Payment Modal */}
+            {isPaymentModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="bg-slate-900 border border-white/10 w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative animate-in zoom-in-95 duration-300">
+                        <button
+                            onClick={closePaymentModal}
+                            className="absolute top-6 right-6 p-2 text-slate-500 hover:text-white transition-colors"
+                        >
+                            <X size={20} />
+                        </button>
+
+                        {isProcessing ? (
+                            <div className="py-20 flex flex-col items-center justify-center space-y-4">
+                                <Loader2 className="w-12 h-12 text-indigo-500 animate-spin" />
+                                <p className="text-sm font-medium text-slate-400">Connecting to {paymentMethod} Secure Gateway...</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-8">
+                                <div className="text-center">
+                                    <div className="w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-indigo-400">
+                                        <Shield size={32} />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-white">{paymentMethod} Payment</h3>
+                                    <p className="text-xs text-slate-500 mt-2">Complete your upgrade to {selectedPlan === "monthly" ? "Pro Monthly" : "Pro Yearly"}</p>
+                                </div>
+
+                                <div className="space-y-6">
+                                    <div className="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-4">
+                                        <div className="flex justify-between items-center pb-4 border-b border-white/5">
+                                            <span className="text-xs text-slate-400 font-medium">Order Total:</span>
+                                            <span className="text-lg font-bold text-white">${selectedPlan === "monthly" ? "10.00" : "70.00"}</span>
+                                        </div>
+
+                                        {paymentMethod === "UPI / QR" ? (
+                                            <div className="flex flex-col items-center gap-4 py-4">
+                                                <div className="p-4 bg-white rounded-2xl">
+                                                    <QrCode size={160} className="text-slate-900" />
+                                                </div>
+                                                <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Scan to Pay via UPI</p>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-4">
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Card Details</label>
+                                                    <div className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm placeholder:text-slate-700 flex items-center gap-3">
+                                                        <CreditCard size={16} className="text-slate-500" />
+                                                        <span>•••• •••• •••• ••••</span>
+                                                    </div>
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div className="space-y-2">
+                                                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Expiry</label>
+                                                        <div className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm">MM / YY</div>
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">CVC</label>
+                                                        <div className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm">•••</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <button
+                                        onClick={() => {
+                                            alert("This is a demo payment flow. In production, this would process your payment.");
+                                            closePaymentModal();
+                                        }}
+                                        className="w-full py-4 rounded-2xl bg-indigo-600 text-white font-bold text-sm shadow-xl shadow-indigo-600/20 hover:bg-indigo-500 transition-all active:scale-[0.98]"
+                                    >
+                                        Pay ${selectedPlan === "monthly" ? "10.00" : "70.00"} Now
+                                    </button>
+
+                                    <p className="text-center text-[10px] text-slate-600 font-medium pb-2">
+                                        Locked and secured with 256-bit encryption. Your data is never shared.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
         </section>
     );
 }

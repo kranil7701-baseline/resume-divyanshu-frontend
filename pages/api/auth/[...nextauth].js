@@ -2,6 +2,8 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { API } from "../../../config";
 
+console.log("NextAuth API URL:", API);
+
 export default NextAuth({
     providers: [
         GoogleProvider({
@@ -11,6 +13,7 @@ export default NextAuth({
     ],
     callbacks: {
         async signIn({ user, account, profile }) {
+            console.log("NEXTAUTH SIGNIN CALLBACK", { provider: account.provider });
             if (account.provider === "google") {
                 try {
                     // You can also pass the id_token if needed

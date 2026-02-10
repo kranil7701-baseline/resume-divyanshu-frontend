@@ -26,6 +26,7 @@ export default function SignIn() {
   }, [status, session]);
 
   const handleGoogleLogin = async () => {
+    console.log("Google Login Button Clicked");
     setLoading(true);
     try {
       await signIn('google');

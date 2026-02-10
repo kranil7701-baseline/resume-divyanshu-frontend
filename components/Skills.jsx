@@ -30,48 +30,62 @@ export default function Skills({ data, onSave, isSaving }) {
   };
 
   return (
-    <section className="bg-slate-900/50 backdrop-blur-md p-5 rounded-2xl shadow-2xl border border-white/10 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-48 h-48 bg-yellow-600/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <h2 className="text-xl font-bold mb-4 text-white relative z-10">Skills</h2>
+    <section className="relative z-10 space-y-8 animate-in fade-in slide-in-from-top-4 duration-700">
+      <div className="flex items-center justify-between border-b border-white/5 pb-6">
+        <div>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">Core Expertise</h2>
+          <p className="text-xs text-slate-500 mt-1">List your technical skills, tools, and proficiencies.</p>
+        </div>
+        <button
+          onClick={add}
+          className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 text-xs font-bold hover:bg-white/10 hover:text-white transition-all active:scale-95"
+        >
+          + Add New Skill
+        </button>
+      </div>
 
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {items.map((it, idx) => (
           <div
             key={it.id}
-            className="flex items-center gap-3 p-3 bg-slate-800/40 border border-white/5 rounded-xl shadow-sm hover:border-white/10 transition group relative z-10"
+            className="group flex items-center gap-3 p-1 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-indigo-500/30 transition-all duration-300"
           >
+            <div className="h-10 w-10 shrink-0 bg-white/5 rounded-xl flex items-center justify-center text-[10px] font-bold text-slate-500 group-hover:text-indigo-400 transition-colors">
+              {idx + 1}
+            </div>
             <input
-              className="flex-1 p-2 rounded-lg bg-slate-900/50 border border-white/10 text-white text-sm hover:bg-slate-900 focus:bg-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition-all placeholder:text-slate-600"
-              placeholder={`Skill ${idx + 1}`}
+              className="flex-1 bg-transparent border-none text-white text-sm focus:ring-0 outline-none placeholder:text-slate-700"
+              placeholder="e.g. React.js, Python, AWS..."
               value={it.skill}
               onChange={(e) => update(it.id, e.target.value)}
             />
-
             <button
               onClick={() => remove(it.id)}
-              className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs font-medium hover:bg-red-500/20 hover:text-red-300 transition opacity-0 group-hover:opacity-100 focus:opacity-100"
+              className="pr-4 text-slate-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0"
             >
-              Remove
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
           </div>
         ))}
       </div>
 
-      {/* Action Buttons */}
-      <div className="mt-6 flex gap-3 relative z-10">
-        <button
-          onClick={add}
-          className="px-4 py-2 rounded-lg bg-slate-800 border border-white/10 text-slate-300 text-sm font-medium hover:bg-slate-700 hover:text-white transition shadow-lg"
-        >
-          + Add Skill
-        </button>
+      {items.length === 0 && (
+        <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-[2rem]">
+          <p className="text-slate-600 text-sm">No skills added yet. Click the button above to start.</p>
+        </div>
+      )}
 
+      {/* Action Footer */}
+      <div className="pt-8 border-t border-white/5 flex justify-end">
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed transition-all active:scale-[0.98] ml-auto"
+          className="group relative px-8 py-3 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-xl shadow-indigo-600/20 hover:shadow-indigo-600/40 hover:-translate-y-0.5 disabled:opacity-50 disabled:translate-y-0 transition-all active:scale-[0.98] overflow-hidden"
         >
-          {isSaving ? "Saving..." : "Save Skills"}
+          <span className="relative z-10">{isSaving ? "Syncing..." : "Save Expertise"}</span>
+          <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300" />
         </button>
       </div>
     </section>

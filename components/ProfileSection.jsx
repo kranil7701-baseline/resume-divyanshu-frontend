@@ -19,52 +19,54 @@ export default function ProfileSection({ data, onSave, isSaving }) {
   };
 
   return (
-    <section className="bg-slate-900/50 backdrop-blur-md p-5 rounded-2xl shadow-2xl border border-white/10 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-48 h-48 bg-blue-600/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <h2 className="text-xl font-bold mb-4 text-white relative z-10">Profile Details</h2>
+    <section className="relative z-10 space-y-8 animate-in fade-in slide-in-from-top-4 duration-700">
+      <div className="flex items-center justify-between border-b border-white/5 pb-6">
+        <div>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">Profile Details</h2>
+          <p className="text-xs text-slate-500 mt-1">Provide your basic information and clinical title.</p>
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Name */}
-        <div className="flex flex-col">
-          <label className="text-slate-400 mb-1 text-xs font-medium ml-1">Full Name</label>
+        <div className="space-y-2">
+          <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Full Name</label>
           <input
-            className="p-2 rounded-lg bg-slate-800/80 border border-white/10 text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition-all placeholder:text-slate-600 hover:bg-slate-800"
-            placeholder="John Doe"
+            className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm focus:bg-white/[0.06] focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-slate-600"
+            placeholder="e.g. Alexander Pierce"
             value={form.name || ""}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
         </div>
 
         {/* Title */}
-        <div className="flex flex-col">
-          <label className="text-slate-400 mb-1 text-xs font-medium ml-1">Title</label>
+        <div className="space-y-2">
+          <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Professional Title</label>
           <input
-            className="p-2 rounded-lg bg-slate-800/80 border border-white/10 text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition-all placeholder:text-slate-600 hover:bg-slate-800"
-            placeholder="Frontend Developer"
+            className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm focus:bg-white/[0.06] focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-slate-600"
+            placeholder="e.g. Senior Software Engineer"
             value={form.title || ""}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
           />
         </div>
 
         {/* Email */}
-        <div className="flex flex-col md:col-span-2">
-          <label className="text-slate-400 mb-1 text-xs font-medium ml-1">Email</label>
+        <div className="space-y-2 md:col-span-2">
+          <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Contact Email</label>
           <input
-            className="p-2 rounded-lg bg-slate-800/80 border border-white/10 text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition-all placeholder:text-slate-600 hover:bg-slate-800"
-            placeholder="email@example.com"
+            className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm focus:bg-white/[0.06] focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-slate-600"
+            placeholder="hello@alexander.com"
             value={form.email || ""}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
         </div>
 
         {/* About */}
-        <div className="flex flex-col md:col-span-2">
-          <label className="text-slate-400 mb-1 text-xs font-medium ml-1">About You</label>
+        <div className="space-y-2 md:col-span-2">
+          <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Professional Summary</label>
           <textarea
-            className="p-2 rounded-lg bg-slate-800/80 border border-white/10 text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition-all placeholder:text-slate-600 hover:bg-slate-800 resize-none"
-            rows={3}
-            placeholder="Short bio..."
+            className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm focus:bg-white/[0.06] focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-slate-600 resize-none min-h-[120px]"
+            placeholder="Briefly describe your background and key strengths..."
             value={form.about || ""}
             onChange={(e) => setForm({ ...form, about: e.target.value })}
           />
@@ -72,13 +74,14 @@ export default function ProfileSection({ data, onSave, isSaving }) {
       </div>
 
       {/* Save Button */}
-      <div className="mt-6 flex justify-end">
+      <div className="pt-8 border-t border-white/5 flex justify-end">
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
+          className="group relative px-8 py-3 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-xl shadow-indigo-600/20 hover:shadow-indigo-600/40 hover:-translate-y-0.5 disabled:opacity-50 disabled:translate-y-0 transition-all active:scale-[0.98] overflow-hidden"
         >
-          {isSaving ? "Saving..." : "Save Profile"}
+          <span className="relative z-10">{isSaving ? "Syncing..." : "Update Profile"}</span>
+          <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300" />
         </button>
       </div>
     </section>

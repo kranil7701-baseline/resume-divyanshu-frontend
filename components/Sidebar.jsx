@@ -4,88 +4,88 @@ import { User, Layers, Briefcase, BookOpen, Star, Award, ChevronRight, FileText,
 
 export default function Sidebar({ activeTab, setActiveTab, userData, handleLogout }) {
   const items = [
-    { id: "profile", label: "Profile", Icon: User, color: "text-blue-500", bg: "bg-blue-50" },
-    { id: "skills", label: "Skills", Icon: Star, color: "text-yellow-500", bg: "bg-yellow-50" },
-    { id: "experience", label: "Experience", Icon: Briefcase, color: "text-purple-500", bg: "bg-purple-50" },
-    { id: "education", label: "Education", Icon: BookOpen, color: "text-green-500", bg: "bg-green-50" },
-    { id: "projects", label: "Projects", Icon: Layers, color: "text-pink-500", bg: "bg-pink-50" },
-    { id: "social", label: "Social Media", Icon: Globe, color: "text-cyan-500", bg: "bg-cyan-50" },
-    { id: "certifications", label: "Certifications", Icon: Award, color: "text-indigo-500", bg: "bg-indigo-50" },
-    { id: "userresume", label: "User Resume", Icon: Zap, color: "text-orange-500", bg: "bg-orange-50" },
-    { id: "generate", label: "Generate Resume", Icon: FileText, color: "text-gray-900", bg: "bg-gray-200" },
+    { id: "profile", label: "Profile", Icon: User, color: "from-blue-500 to-cyan-400" },
+    { id: "skills", label: "Skills", Icon: Star, color: "from-yellow-400 to-orange-500" },
+    { id: "experience", label: "Experience", Icon: Briefcase, color: "from-purple-500 to-indigo-500" },
+    { id: "education", label: "Education", Icon: BookOpen, color: "from-emerald-400 to-teal-500" },
+    { id: "projects", label: "Projects", Icon: Layers, color: "from-pink-500 to-rose-500" },
+    { id: "social", label: "Social", Icon: Globe, color: "from-cyan-400 to-blue-500" },
+    { id: "certifications", label: "Awards", Icon: Award, color: "from-indigo-400 to-violet-500" },
+    { id: "userresume", label: "Preview", Icon: Zap, color: "from-orange-400 to-red-500" },
+    { id: "generate", label: "Build", Icon: FileText, color: "from-slate-400 to-slate-600" },
   ];
 
   return (
-    <aside className="lg:w-64 w-full flex-shrink-0 bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-xl rounded-3xl p-4 flex flex-col gap-4 sticky top-20 h-fit transition-all hover:bg-slate-900/90">
-
-      {/* Profile Summary Header (Mini) */}
-      <div className="flex items-center gap-3 px-1">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-bold text-base shadow-lg ring-1 ring-white/10">
-          {userData?.profile?.name ? userData.profile.name[0] : "U"}
-        </div>
-        <div>
-          <h3 className="font-bold text-white tracking-tight text-sm">{userData?.profile?.name || "User Name"}</h3>
-          <p className="text-[10px] text-slate-400 font-medium bg-slate-800 px-2 py-0.5 rounded-full inline-block mt-0.5">Resume Builder</p>
+    <aside className="w-24 lg:w-[100px] h-screen bg-white/5 border-r border-white/10 flex flex-col items-center py-8 gap-8 backdrop-blur-xl relative z-20 transition-all duration-300">
+      {/* Brand Icon */}
+      <div className="relative group">
+        <div className="h-14 w-14 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(79,70,229,0.3)] group-hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transition-all transform group-hover:rotate-12">
+          <Zap className="text-white w-7 h-7 fill-white/20" />
         </div>
       </div>
 
-      <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="w-10 h-px bg-white/10" />
 
       {/* Navigation */}
-      <nav className="flex flex-col gap-2 flex-grow">
-        {items.map(({ id, label, Icon, color, bg }) => {
+      <nav className="flex flex-col gap-5 flex-grow overflow-y-auto no-scrollbar py-4 px-2">
+        {items.map(({ id, label, Icon, color }) => {
           const isActive = activeTab === id;
-          const count = userData && Array.isArray(userData[id]) ? userData[id].length : (userData?.profile && id === 'profile' ? 1 : 0);
 
           return (
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`group relative flex items-center justify-between w-full px-3 py-2.5 rounded-xl transition-all duration-300 ease-out border cursor-pointer
+              className={`group relative flex flex-col items-center justify-center p-3 rounded-2xl transition-all duration-500
                 ${isActive
-                  ? "bg-blue-600/10 border-blue-500/50 shadow-lg shadow-blue-500/10 scale-100 ring-1 ring-blue-500/20"
-                  : "bg-transparent border-transparent hover:bg-white/5 hover:border-white/10 hover:shadow-sm text-slate-400"
+                  ? "bg-indigo-500/10 shadow-[inset_0_0_15px_rgba(99,102,241,0.2)]"
+                  : "hover:bg-white/5"
                 }`}
             >
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg transition-colors duration-300 ${isActive ? "bg-blue-600/20" : "bg-slate-800/50 group-hover:bg-slate-800"}`}>
-                  <Icon className={`w-4 h-4 ${isActive ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300"}`} />
-                </div>
-                <span className={`font-semibold text-xs tracking-tight ${isActive ? "text-white" : "text-slate-400 group-hover:text-white"}`}>
-                  {label}
-                </span>
+              {/* Active Indicator Tooltip (Optional, can be seen as label below) */}
+              <div className={`p-2.5 rounded-xl transition-all duration-300 
+                ${isActive
+                  ? `bg-gradient-to-br ${color} shadow-lg shadow-indigo-500/20`
+                  : "bg-slate-800/50 group-hover:bg-slate-700/50 text-slate-500 group-hover:text-slate-300"}`}
+              >
+                <Icon className={`w-5 h-5 ${isActive ? "text-white" : ""}`} />
               </div>
 
-              <div className="flex items-center gap-2">
-                {count > 0 && (
-                  <span className={`text-xs font-bold px-2 py-1 rounded-full ${isActive ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-400 group-hover:bg-slate-700"}`}>
-                    {count}
-                  </span>
-                )}
-                {isActive && <ChevronRight className="w-4 h-4 text-blue-500" />}
-              </div>
+              <span className={`text-[9px] font-bold mt-2 uppercase tracking-tight transition-all
+                ${isActive ? "text-indigo-400" : "text-slate-500 group-hover:text-slate-300"}`}>
+                {label}
+              </span>
 
-              {/* Active Indicator Bar */}
+              {/* Side Indicator */}
               {isActive && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-500 rounded-r-full" />
+                <div className="absolute right-[-10px] top-1/2 -translate-y-1/2 w-1.5 h-6 bg-indigo-500 rounded-l-full shadow-[0_0_10px_rgba(99,102,241,0.8)]" />
               )}
             </button>
           );
         })}
       </nav>
 
-      <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="w-10 h-px bg-white/10" />
 
-      {/* Logout Button */}
-      <button
-        onClick={handleLogout}
-        className="group relative flex items-center gap-3 w-full px-3 py-2.5 rounded-xl transition-all duration-300 ease-out border border-transparent hover:bg-red-500/10 hover:border-red-500/20 text-slate-400 hover:text-red-400 cursor-pointer"
-      >
-        <div className="p-2 rounded-lg bg-slate-800/50 group-hover:bg-red-500/20 transition-colors duration-300">
-          <LogOut className="w-4 h-4 text-slate-500 group-hover:text-red-400" />
-        </div>
-        <span className="font-semibold text-xs tracking-tight">Logout</span>
-      </button>
+      {/* Profile & Logout */}
+      <div className="flex flex-col gap-6 pb-4">
+        <button
+          onClick={handleLogout}
+          className="group p-3 rounded-2xl bg-red-500/5 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all text-slate-500 hover:text-red-400 shadow-sm"
+          title="Sign Out"
+        >
+          <LogOut className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" />
+        </button>
+      </div>
+
+      <style jsx>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </aside>
   );
 }

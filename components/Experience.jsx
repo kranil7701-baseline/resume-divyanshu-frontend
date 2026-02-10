@@ -34,122 +34,118 @@ export default function Experience({ data, onSave, isSaving }) {
   };
 
   return (
-    <section className="bg-slate-900/50 backdrop-blur-md p-5 rounded-2xl shadow-2xl border border-white/10 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-48 h-48 bg-purple-600/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <h2 className="text-xl font-bold mb-4 text-white relative z-10">Experience</h2>
+    <section className="relative z-10 space-y-8 animate-in fade-in slide-in-from-top-4 duration-700">
+      <div className="flex items-center justify-between border-b border-white/5 pb-6">
+        <div>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">Work Experience</h2>
+          <p className="text-xs text-slate-500 mt-1">Timeline of your professional journey and achievements.</p>
+        </div>
+        <button
+          onClick={add}
+          className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 text-xs font-bold hover:bg-white/10 hover:text-white transition-all active:scale-95"
+        >
+          + Add Experience
+        </button>
+      </div>
 
-      <div className="space-y-4">
-        {rows.map((r) => (
+      <div className="space-y-6">
+        {rows.map((r, idx) => (
           <div
             key={r.id}
-            className="p-4 bg-slate-800/40 border border-white/5 rounded-xl shadow-sm hover:border-white/10 transition group relative z-10"
+            className="group relative p-6 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:border-indigo-500/30 transition-all duration-500"
           >
-            <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Role */}
-              <div className="flex flex-col md:col-span-2">
-                <label className="text-slate-400 mb-1 text-xs font-medium ml-1">Role</label>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Job Role</label>
                 <input
-                  className="p-2 rounded-lg bg-slate-900/50 border border-white/10 text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition-all placeholder:text-slate-600"
-                  placeholder="Software Developer"
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm focus:bg-white/[0.06] focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-slate-700"
+                  placeholder="e.g. Senior Product Designer"
                   value={r.role}
                   onChange={(e) => update(r.id, "role", e.target.value)}
                 />
               </div>
 
               {/* Company */}
-              <div className="flex flex-col md:col-span-2">
-                <label className="text-slate-400 mb-1 text-xs font-medium ml-1">Company</label>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Company / Organization</label>
                 <input
-                  className="p-2 rounded-lg bg-slate-900/50 border border-white/10 text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition-all placeholder:text-slate-600"
-                  placeholder="Company name"
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm focus:bg-white/[0.06] focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-slate-700"
+                  placeholder="e.g. Google, Stripe, etc."
                   value={r.company}
                   onChange={(e) => update(r.id, "company", e.target.value)}
                 />
               </div>
 
-              {/* Dates */}
-              <div className="flex flex-col md:col-span-2 gap-2">
-                <div className="flex flex-col md:flex-row gap-2">
-                  <div className="flex-1 flex flex-col">
-                    <label className="text-slate-500 mb-1 text-[10px] ml-1 uppercase">Start</label>
-                    <input
-                      type="date"
-                      className="p-2 w-full rounded-lg bg-slate-900/50 border border-white/10 text-white text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition-all [color-scheme:dark]"
-                      value={(() => {
-                        if (!r.start) return '';
-                        try {
-                          return new Date(r.start).toISOString().split('T')[0];
-                        } catch (e) {
-                          return '';
-                        }
-                      })()}
-                      onChange={(e) => update(r.id, "start", e.target.value)}
-                    />
-                  </div>
-
-                  <div className="flex-1 flex flex-col">
-                    <label className="text-slate-500 mb-1 text-[10px] ml-1 uppercase">End</label>
-                    <input
-                      type="date"
-                      className="p-2 w-full rounded-lg bg-slate-900/50 border border-white/10 text-white text-xs focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition-all [color-scheme:dark]"
-                      value={(() => {
-                        if (!r.end) return '';
-                        try {
-                          return new Date(r.end).toISOString().split('T')[0];
-                        } catch (e) {
-                          return '';
-                        }
-                      })()}
-                      onChange={(e) => update(r.id, "end", e.target.value)}
-                    />
-                  </div>
+              {/* Date Range */}
+              <div className="md:col-span-2 grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Start Date</label>
+                  <input
+                    type="date"
+                    className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm focus:bg-white/[0.06] focus:border-indigo-500/50 outline-none transition-all [color-scheme:dark]"
+                    value={(() => {
+                      if (!r.start) return '';
+                      try { return new Date(r.start).toISOString().split('T')[0]; } catch (e) { return ''; }
+                    })()}
+                    onChange={(e) => update(r.id, "start", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">End Date</label>
+                  <input
+                    type="date"
+                    className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm focus:bg-white/[0.06] focus:border-indigo-500/50 outline-none transition-all [color-scheme:dark]"
+                    value={(() => {
+                      if (!r.end) return '';
+                      try { return new Date(r.end).toISOString().split('T')[0]; } catch (e) { return ''; }
+                    })()}
+                    onChange={(e) => update(r.id, "end", e.target.value)}
+                  />
                 </div>
               </div>
 
               {/* Details */}
-              <div className="flex flex-col md:col-span-6">
-                <label className="text-slate-400 mb-1 text-xs font-medium ml-1">
-                  Details / Responsibilities
-                </label>
+              <div className="md:col-span-2 space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 ml-1">Key Responsibilities</label>
                 <textarea
-                  className="p-2 rounded-lg bg-slate-900/50 border border-white/10 text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition-all placeholder:text-slate-600 resize-none"
-                  rows={2}
-                  placeholder="Describe your responsibilities..."
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-white text-sm focus:bg-white/[0.06] focus:border-indigo-500/50 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all placeholder:text-slate-700 resize-none min-h-[100px]"
+                  placeholder="Summarize your impact and achievements..."
                   value={r.details}
                   onChange={(e) => update(r.id, "details", e.target.value)}
                 />
               </div>
             </div>
 
-            {/* Remove Button */}
-            <div className="flex justify-end mt-2">
-              <button
-                onClick={() => remove(r.id)}
-                className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 text-xs border border-red-500/20 hover:bg-red-500/20 hover:text-red-300 transition opacity-0 group-hover:opacity-100 focus:opacity-100"
-              >
-                Remove
-              </button>
-            </div>
+            {/* Floating Remove Button */}
+            <button
+              onClick={() => remove(r.id)}
+              className="absolute top-4 right-4 p-2 bg-red-500/10 text-red-500 rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500 hover:text-white"
+              title="Remove Entry"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
         ))}
       </div>
 
-      {/* Action Buttons */}
-      <div className="mt-6 flex gap-3 relative z-10" >
-        <button
-          onClick={add}
-          className="px-4 py-2 rounded-lg bg-slate-800 border border-white/10 text-slate-300 text-sm font-medium hover:bg-slate-700 hover:text-white transition shadow-lg"
-        >
-          + Add Experience
-        </button>
+      {rows.length === 0 && (
+        <div className="py-20 text-center border-2 border-dashed border-white/5 rounded-[2rem]">
+          <p className="text-slate-600 text-sm">No work experience added. Use the button to build your timeline.</p>
+        </div>
+      )}
 
+      {/* Action Footer */}
+      <div className="pt-8 border-t border-white/5 flex justify-end">
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed transition-all active:scale-[0.98] ml-auto"
+          className="group relative px-8 py-3 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-xl shadow-indigo-600/20 hover:shadow-indigo-600/40 hover:-translate-y-0.5 disabled:opacity-50 disabled:translate-y-0 transition-all active:scale-[0.98] overflow-hidden"
         >
-          {isSaving ? "Saving..." : "Save Experience"}
+          <span className="relative z-10">{isSaving ? "Syncing..." : "Save Experience"}</span>
+          <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300" />
         </button>
       </div>
     </section>

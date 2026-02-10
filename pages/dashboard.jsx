@@ -162,53 +162,97 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 font-sans text-slate-100 selection:bg-blue-500/30 selection:text-blue-200">
+    <div className="min-h-screen bg-[#05060f] font-sans text-slate-100 selection:bg-indigo-500/30 selection:text-indigo-200">
+      {/* Dynamic Background Elements */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl mix-blend-screen opacity-50 animate-blob"></div>
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl mix-blend-screen opacity-50 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl mix-blend-screen opacity-50 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/20 rounded-full blur-[120px] mix-blend-screen animate-pulse"></div>
+        <div className="absolute bottom-[10%] right-[-5%] w-[35%] h-[35%] bg-blue-600/15 rounded-full blur-[100px] mix-blend-screen animate-pulse animation-delay-2000"></div>
+        <div className="absolute top-[20%] right-[10%] w-[25%] h-[25%] bg-violet-600/10 rounded-full blur-[80px] mix-blend-screen animate-pulse animation-delay-4000"></div>
       </div>
 
-      <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-        <header className="py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-1">
-          <div>
-            {/* <h1 className="text-3xl font-extrabold text-white tracking-tight">Dashboard</h1> */}
-            <p className="text-slate-400 mt-1 text-base">Welcome back, <span className="text-blue-400">{user?.name || "Creator"}</span></p>
-          </div>
-        </header>
+      <div className="relative z-10 flex h-screen overflow-hidden">
+        {/* Modern Sidebar Container */}
+        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} userData={userData} handleLogout={handleLogout} />
 
-        <div className="flex flex-col lg:flex-row gap-6 py-4">
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} userData={userData} handleLogout={handleLogout} />
-
-          <main className="flex-1 min-w-0">
-            <div className="bg-transparent rounded-3xl min-h-[500px] transition-all duration-300">
-              <div className="mb-6 pb-3 border-b border-white/10 flex justify-between items-center">
-                <div>
-                  <h2 className="text-2xl font-bold text-white capitalize">{activeTab === 'social' ? 'Social Media' : activeTab}</h2>
-                  <p className="text-slate-400 text-xs mt-0.5">Manage your {activeTab} information</p>
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-y-auto custom-scrollbar">
+          <div className="max-w-5xl mx-auto px-6 py-8">
+            {/* Top Toolbar */}
+            <header className="flex items-center justify-between mb-10 bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl px-6 py-4">
+              <div className="flex items-center gap-4">
+                <div className="h-10 w-10 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                  <span className="text-white font-bold">R</span>
                 </div>
-                {isSaving && (
-                  <span className="text-xs font-medium text-blue-400 flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded-full">
-                    <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" /> Saving...
-                  </span>
-                )}
+                <div>
+                  <h1 className="text-lg font-bold text-white tracking-tight">Resume Workspace</h1>
+                  <p className="text-[10px] text-slate-400 font-medium uppercase tracking-[0.1em]">Editing: {activeTab === 'profile' ? 'Primary Profile' : activeTab}</p>
+                </div>
               </div>
 
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                {activeTab === 'profile' && <ProfileSection data={userData.profile || {}} onSave={saveToDatabase} isSaving={isSaving} />}
-                {activeTab === 'skills' && <SkillsSection data={userData.skills || []} onSave={saveToDatabase} isSaving={isSaving} />}
-                {activeTab === 'experience' && <ExperienceSection data={userData.experience || []} onSave={saveToDatabase} isSaving={isSaving} />}
-                {activeTab === 'education' && <EducationSection data={userData.education || []} onSave={saveToDatabase} isSaving={isSaving} />}
-                {activeTab === 'projects' && <ProjectsSection data={userData.projects || []} onSave={saveToDatabase} isSaving={isSaving} />}
-                {activeTab === 'social' && <SocialsSection data={userData.social || []} onSave={saveToDatabase} isSaving={isSaving} />}
-                {activeTab === 'certifications' && <CertificationsSection data={userData.certifications || []} onSave={saveToDatabase} isSaving={isSaving} />}
-                {activeTab === 'generate' && <GenerateResume data={userData} />}
-                {activeTab === 'userresume' && <UserResume data={userData} />}
+              <div className="flex items-center gap-4">
+                {isSaving && (
+                  <div className="flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 rounded-full">
+                    <div className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-ping" />
+                    <span className="text-[10px] font-bold text-indigo-300 uppercase letter tracking-wider">Syncing</span>
+                  </div>
+                )}
+                <div className="h-8 w-px bg-white/10 mx-2" />
+                <div className="flex items-center gap-3">
+                  <div className="text-right hidden sm:block">
+                    <p className="text-xs font-bold text-white leading-none">{user?.name || "User"}</p>
+                    <p className="text-[10px] text-slate-500 mt-1">Creator Account</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-slate-800 border-2 border-white/5 flex items-center justify-center overflow-hidden ring-2 ring-indigo-500/20">
+                    <span className="text-sm font-bold text-indigo-400 uppercase">{user?.name ? user.name[0] : "U"}</span>
+                  </div>
+                </div>
+              </div>
+            </header>
+
+            {/* Content Container */}
+            <div className="relative">
+              {/* Decorative Section Badge */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-4 animate-in fade-in slide-in-from-left-4 duration-500">
+                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300">{activeTab} Details</span>
+              </div>
+
+              <div className="bg-white/5 border border-white/10 rounded-[2rem] p-8 backdrop-blur-sm min-h-[600px] shadow-2xl relative overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-700">
+                {/* Background Decoration for the card */}
+                <div className="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/5 rounded-full blur-3xl"></div>
+
+                <div className="relative z-10">
+                  {activeTab === 'profile' && <ProfileSection data={userData.profile || {}} onSave={saveToDatabase} isSaving={isSaving} />}
+                  {activeTab === 'skills' && <SkillsSection data={userData.skills || []} onSave={saveToDatabase} isSaving={isSaving} />}
+                  {activeTab === 'experience' && <ExperienceSection data={userData.experience || []} onSave={saveToDatabase} isSaving={isSaving} />}
+                  {activeTab === 'education' && <EducationSection data={userData.education || []} onSave={saveToDatabase} isSaving={isSaving} />}
+                  {activeTab === 'projects' && <ProjectsSection data={userData.projects || []} onSave={saveToDatabase} isSaving={isSaving} />}
+                  {activeTab === 'social' && <SocialsSection data={userData.social || []} onSave={saveToDatabase} isSaving={isSaving} />}
+                  {activeTab === 'certifications' && <CertificationsSection data={userData.certifications || []} onSave={saveToDatabase} isSaving={isSaving} />}
+                  {activeTab === 'generate' && <GenerateResume data={userData} />}
+                  {activeTab === 'userresume' && <UserResume data={userData} />}
+                </div>
               </div>
             </div>
-          </main>
-        </div>
+          </div>
+        </main>
       </div>
+
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      `}</style>
     </div>
   );
 }

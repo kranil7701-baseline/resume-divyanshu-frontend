@@ -10,7 +10,6 @@ export default function Sidebar({ activeTab, setActiveTab, userData, handleLogou
     { id: "projects", label: "Projects", Icon: Layers, color: "from-pink-500 to-rose-500" },
     { id: "social", label: "Social", Icon: Globe, color: "from-cyan-400 to-blue-500" },
     { id: "certifications", label: "Certifications", Icon: Award, color: "from-indigo-400 to-violet-500" },
-    { id: "subscription", label: "Pricing", Icon: CreditCard, color: "from-amber-400 to-yellow-600" },
     { id: "userresume", label: "Preview", Icon: Zap, color: "from-orange-400 to-red-500" },
     { id: "generate", label: "Build", Icon: FileText, color: "from-slate-400 to-slate-600" },
   ];

@@ -37,10 +37,30 @@ export default function Subscription() {
         }
     ];
 
-    const handlePayment = (method) => {
-        // These would trigger the respective SDKs (Stripe/Razorpay) 
-        // using secrets from process.env
-        alert(`Redirecting to ${method} payment gateway...`);
+    const handlePayment = async (method) => {
+        try {
+            // In production, this would call your backend to create an Order/Session
+            // and then open the respective gateway hosted page or modal
+            console.log(`Initializing ${method} payment flow for plan: ${selectedPlan}`);
+
+            if (method === "Stripe") {
+                // Example Stripe Integration:
+                // const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+                // await stripe.redirectToCheckout({ sessionId: YOUR_BACKEND_SESSION_ID });
+                window.location.href = `/api/payment/stripe?plan=${selectedPlan}`; // Placeholder redirect
+            } else if (method === "Razorpay") {
+                // Example Razorpay Integration:
+                // const options = { key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, amount: '...', ... };
+                // const rzp = new window.Razorpay(options);
+                // rzp.open();
+                alert("Initializing Razorpay Secure Checkout...");
+            } else if (method === "UPI") {
+                // Direct to UPI/QR Scanner page
+                alert("Generating dynamic UPI QR Code for instant payment...");
+            }
+        } catch (error) {
+            console.error("Payment initialization failed:", error);
+        }
     };
 
     return (
@@ -60,8 +80,8 @@ export default function Subscription() {
                     <div
                         key={plan.id}
                         className={`relative p-8 rounded-[2.5rem] border transition-all duration-500 flex flex-col ${plan.highlight
-                                ? "bg-indigo-600/10 border-indigo-500/50 shadow-[0_0_40px_rgba(99,102,241,0.1)] scale-105 z-10"
-                                : "bg-white/[0.02] border-white/10 hover:border-white/20"
+                            ? "bg-indigo-600/10 border-indigo-500/50 shadow-[0_0_40px_rgba(99,102,241,0.1)] scale-105 z-10"
+                            : "bg-white/[0.02] border-white/10 hover:border-white/20"
                             }`}
                     >
                         {plan.highlight && (
@@ -93,8 +113,8 @@ export default function Subscription() {
                         <button
                             onClick={() => setSelectedPlan(plan.id)}
                             className={`w-full py-4 rounded-2xl font-bold text-sm transition-all active:scale-95 ${selectedPlan === plan.id
-                                    ? "bg-indigo-600 text-white shadow-xl shadow-indigo-600/20"
-                                    : "bg-white/5 text-slate-300 hover:bg-white/10"
+                                ? "bg-indigo-600 text-white shadow-xl shadow-indigo-600/20"
+                                : "bg-white/5 text-slate-300 hover:bg-white/10"
                                 }`}
                         >
                             Select {plan.name}

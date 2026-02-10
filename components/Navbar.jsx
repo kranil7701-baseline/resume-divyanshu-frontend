@@ -25,9 +25,9 @@ const Navbar = () => {
   // Updated navigation items for resume builder
   const navItems = [
     { label: 'Templates', href: '/' },
-    { label: 'Examples', href: '/' },
-    { label: 'Pricing', href: '/' },
-    { label: 'Blog', href: '/' },
+    { label: 'Examples', href: '/examples' },
+    { label: 'Pricing', href: '/pricing' },
+    { label: 'Blog', href: '#' },
   ];
 
   const handleLogout = () => {

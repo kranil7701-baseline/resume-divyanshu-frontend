@@ -14,7 +14,6 @@ import GenerateResume from '@/components/GenerateResume';
 import UserResume from '@/components/UserResume';
 import Sidebar from '@/components/Sidebar';
 import SocialsSection from '@/components/Socials';
-import SubscriptionSection from '@/components/Subscription';
 import { Toaster, toast } from 'react-hot-toast';
 
 export default function Dashboard() {
@@ -261,7 +260,6 @@ export default function Dashboard() {
                   {activeTab === 'projects' && <ProjectsSection data={userData.projects || []} onSave={saveToDatabase} isSaving={isSaving} />}
                   {activeTab === 'social' && <SocialsSection data={userData.social || []} onSave={saveToDatabase} isSaving={isSaving} />}
                   {activeTab === 'certifications' && <CertificationsSection data={userData.certifications || []} onSave={saveToDatabase} isSaving={isSaving} />}
-                  {activeTab === 'subscription' && <SubscriptionSection />}
                   {activeTab === 'generate' && <GenerateResume data={userData} />}
                   {activeTab === 'userresume' && <UserResume data={userData} />}
                 </div>

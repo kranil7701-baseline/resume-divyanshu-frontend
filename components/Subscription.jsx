@@ -171,11 +171,17 @@ export default function Subscription() {
 
             {/* Mock Payment Modal */}
             {isPaymentModalOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-300">
-                    <div className="bg-slate-900 border border-white/10 w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative animate-in zoom-in-95 duration-300">
+                <div
+                    className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-300 cursor-default"
+                    onClick={closePaymentModal}
+                >
+                    <div
+                        className="bg-slate-900 border border-white/10 w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative animate-in zoom-in-95 duration-300 cursor-default"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <button
                             onClick={closePaymentModal}
-                            className="absolute top-6 right-6 p-2 text-slate-500 hover:text-white transition-colors"
+                            className="absolute top-6 right-6 p-2 text-slate-500 hover:text-white transition-colors z-[110]"
                         >
                             <X size={20} />
                         </button>

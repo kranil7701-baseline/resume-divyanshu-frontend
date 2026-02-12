@@ -33,9 +33,18 @@ export default function Certifications({ data, onSave, isSaving }) {
 
     setRows(updatedRows);
     closeModal();
+
+    // Auto-save to DB
+    const payload = updatedRows.map(({ id, _id, createdAt, updatedAt, userId, isNew, ...rest }) => rest);
+    onSave('certifications', payload);
   };
 
-  const remove = (id) => setRows((r) => r.filter((x) => x.id !== id));
+  const remove = (id) => {
+    const updatedRows = rows.filter((x) => x.id !== id);
+    setRows(updatedRows);
+    const payload = updatedRows.map(({ id, _id, createdAt, updatedAt, userId, isNew, ...rest }) => rest);
+    onSave('certifications', payload);
+  };
 
   const saveToDatabase = () => {
     const payload = rows.map(({ id, _id, createdAt, updatedAt, userId, isNew, ...rest }) => rest);

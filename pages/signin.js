@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { API } from '@/config';
+import { API } from '../config';
 import { signIn, useSession } from 'next-auth/react';
 
 export default function SignIn() {

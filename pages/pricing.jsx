@@ -1,7 +1,7 @@
 import Head from 'next/head';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import SubscriptionSection from '@/components/Subscription';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import SubscriptionSection from '../components/Subscription';
 
 export default function PricingPage() {
     return (

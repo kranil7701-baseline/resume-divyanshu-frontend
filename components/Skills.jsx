@@ -32,9 +32,18 @@ export default function Skills({ data, onSave, isSaving }) {
 
     setItems(updatedItems);
     closeModal();
+
+    // Auto-save to DB
+    const skillsArray = updatedItems.map(i => i.skill).filter(Boolean);
+    onSave('skills', skillsArray);
   };
 
-  const remove = (id) => setItems((s) => s.filter((x) => x.id !== id));
+  const remove = (id) => {
+    const updatedItems = items.filter((x) => x.id !== id);
+    setItems(updatedItems);
+    const skillsArray = updatedItems.map(i => i.skill).filter(Boolean);
+    onSave('skills', skillsArray);
+  };
 
   const saveToDatabase = () => {
     const skillsArray = items.map(i => i.skill).filter(Boolean);

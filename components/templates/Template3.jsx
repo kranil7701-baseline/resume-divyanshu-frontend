@@ -1,5 +1,5 @@
 export default function Template3({ data, id, font = 'font-sans', color = '#4f46e5' }) {
-    const { profile, experience, education, skills, projects, certifications, social } = data;
+    const { profile, experience, education, skills, projects, projectExperience, certifications, social } = data;
 
     const fontStyles = {
         'font-sans': 'Inter, system-ui, sans-serif',
@@ -83,6 +83,38 @@ export default function Template3({ data, id, font = 'font-sans', color = '#4f46
                                     </div>
                                     <div className="text-[11px] font-bold mb-3 opacity-60 uppercase tracking-widest">{exp.company}</div>
                                     <p className="text-[11px] text-slate-500 leading-relaxed">{exp.details}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Project History */}
+                {projectExperience?.length > 0 && (
+                    <section className="grid grid-cols-12 items-start">
+                        <div className="col-span-1 h-full w-1 bg-slate-100" />
+                        <div className="col-span-2 text-[10px] font-black uppercase tracking-widest pt-1 px-2">
+                            Projects
+                        </div>
+                        <div className="col-span-9 pl-6 space-y-10">
+                            {projectExperience.map((proj) => (
+                                <div key={proj.id || Math.random()} className="relative">
+                                    <div className="absolute -left-[28px] top-[7px] w-2 h-2 rounded-full border-2 border-slate-200 bg-white" />
+                                    <div className="flex justify-between items-baseline mb-2">
+                                        <h3 className="font-black text-[14px] text-slate-900 uppercase">{proj.title}</h3>
+                                        <span className="text-[9px] font-black font-mono text-slate-400">
+                                            {proj.start ? new Date(proj.start).getFullYear() : ''} // {proj.end ? new Date(proj.end).getFullYear() : 'NOW'}
+                                        </span>
+                                    </div>
+                                    <div className="text-[11px] font-bold mb-2 opacity-60 uppercase tracking-widest">
+                                        {proj.client} {proj.role ? `| ${proj.role}` : ''}
+                                    </div>
+                                    <p className="text-[11px] text-slate-500 leading-relaxed mb-2">{proj.details}</p>
+                                    {proj.technologies && (
+                                        <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                                            Technologies // <span className="text-slate-600">{proj.technologies}</span>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>

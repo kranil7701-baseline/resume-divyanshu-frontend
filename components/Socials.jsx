@@ -30,10 +30,15 @@ export default function SocialsSection({ data, onSave, isSaving }) {
 
         setSocials(updatedSocials);
         closeModal();
+
+        // Auto-save to DB
+        onSave('social', updatedSocials);
     };
 
     const removeSocial = (index) => {
-        setSocials(socials.filter((_, i) => i !== index));
+        const updatedSocials = socials.filter((_, i) => i !== index);
+        setSocials(updatedSocials);
+        onSave('social', updatedSocials);
     };
 
     const handleSave = () => {

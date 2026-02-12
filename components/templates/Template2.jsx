@@ -1,5 +1,5 @@
 export default function Template2({ data, id, font = 'font-sans', color = '#334155' }) {
-    const { profile, experience, education, skills, projects, certifications, social } = data;
+    const { profile, experience, education, skills, projects, projectExperience, certifications, social } = data;
 
     const fontStyles = {
         'font-sans': 'Inter, system-ui, sans-serif',
@@ -73,6 +73,34 @@ export default function Template2({ data, id, font = 'font-sans', color = '#3341
                                     </div>
                                     <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3 italic">{exp.company}</div>
                                     <p className="text-[11px] text-slate-600 text-justify leading-relaxed">{exp.details}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Project Experience */}
+                {projectExperience?.length > 0 && (
+                    <section className="grid grid-cols-12 gap-8">
+                        <div className="col-span-3 text-[10px] font-black uppercase tracking-[0.2em] pt-1" style={{ color }}>
+                            Projects
+                        </div>
+                        <div className="col-span-9 space-y-8">
+                            {projectExperience.map((proj) => (
+                                <div key={proj.id || Math.random()}>
+                                    <div className="flex justify-between items-baseline mb-2">
+                                        <h3 className="font-bold text-[13px] text-slate-900">{proj.title}</h3>
+                                        <span className="text-[10px] font-medium text-slate-400">
+                                            {proj.start ? new Date(proj.start).getFullYear() : ''} — {proj.end ? new Date(proj.end).getFullYear() : 'Present'}
+                                        </span>
+                                    </div>
+                                    <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 italic">
+                                        {proj.client} {proj.role ? `| ${proj.role}` : ''}
+                                    </div>
+                                    <p className="text-[11px] text-slate-600 text-justify leading-relaxed mb-2">{proj.details}</p>
+                                    {proj.technologies && (
+                                        <p className="text-[10px] text-slate-400 font-bold tracking-tight">TECH: {proj.technologies}</p>
+                                    )}
                                 </div>
                             ))}
                         </div>

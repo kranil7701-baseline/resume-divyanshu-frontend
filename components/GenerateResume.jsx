@@ -83,6 +83,12 @@ export default function GenerateResume({ data }) {
                                 >
                                     Grid
                                 </button>
+                                <button
+                                    onClick={() => setTemplate('template4')}
+                                    className={`flex-1 py-1.5 rounded-lg text-[11px] font-bold transition-all ${template === 'template4' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
+                                >
+                                    Executive
+                                </button>
                             </div>
                         </div>
 

@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import Template1 from '@/components/templates/Template1';
-import Template2 from '@/components/templates/Template2';
-import Template3 from '@/components/templates/Template3';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import Template1 from '../components/templates/Template1';
+import Template2 from '../components/templates/Template2';
+import Template3 from '../components/templates/Template3';
+import Template4 from '../components/templates/Template4';
 
 export default function Examples() {
     const [activeTemplate, setActiveTemplate] = useState(1);
@@ -142,9 +143,15 @@ export default function Examples() {
         },
         {
             id: 3,
-            name: "Executive",
+            name: "Grid",
             description: "Bold layout ideal for senior positions",
             component: Template3
+        },
+        {
+            id: 4,
+            name: "Executive",
+            description: "Clean, single-column minimalist executive design",
+            component: Template4
         }
     ];
 
@@ -173,8 +180,8 @@ export default function Examples() {
                                 key={template.id}
                                 onClick={() => setActiveTemplate(template.id)}
                                 className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${activeTemplate === template.id
-                                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/50 scale-105'
-                                        : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-white/10'
+                                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/50 scale-105'
+                                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-white/10'
                                     }`}
                             >
                                 <div className="text-left">

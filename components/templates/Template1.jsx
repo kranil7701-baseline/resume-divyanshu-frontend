@@ -2,7 +2,7 @@ import React from "react";
 import { Mail, Phone, MapPin, Linkedin, Link as LinkIcon, ExternalLink, Github, Youtube, Twitter } from "lucide-react";
 
 export default function Template1({ data, id, font = 'font-sans', color = '#2563eb' }) {
-    const { profile, experience, education, skills, projects, certifications, social } = data;
+    const { profile, experience, education, skills, projects, projectExperience, certifications, social } = data;
 
     const fontStyles = {
         'font-sans': 'Inter, system-ui, sans-serif',
@@ -104,6 +104,39 @@ export default function Template1({ data, id, font = 'font-sans', color = '#2563
                                         <div className="text-slate-600 text-[11px] leading-relaxed whitespace-pre-line pl-2 border-l-2 border-slate-100">
                                             {exp.details}
                                         </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {/* Project Experience */}
+                    {projectExperience?.length > 0 && (
+                        <section>
+                            <h2 className="text-sm font-black uppercase tracking-[0.2em] mb-4 border-b-2 pb-1" style={sectionTitleStyle}>
+                                Project Experience
+                            </h2>
+                            <div className="space-y-8">
+                                {projectExperience.map((proj) => (
+                                    <div key={proj.id || Math.random()}>
+                                        <div className="flex justify-between items-baseline mb-1">
+                                            <h3 className="font-bold text-[#111827] text-sm uppercase tracking-tight">{proj.title}</h3>
+                                            <span className="text-[9px] text-slate-400 font-bold uppercase bg-slate-50 px-2 py-0.5 rounded border border-slate-100 italic">
+                                                {proj.start ? new Date(proj.start).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ''} —
+                                                {proj.end ? new Date(proj.end).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ' Present'}
+                                            </span>
+                                        </div>
+                                        <div className="text-[11px] font-bold text-slate-500 mb-2 uppercase tracking-wide">
+                                            {proj.client} {proj.role ? `| ${proj.role}` : ''}
+                                        </div>
+                                        <div className="text-slate-600 text-[11px] leading-relaxed whitespace-pre-line pl-2 border-l-2 border-slate-100 mb-2">
+                                            {proj.details}
+                                        </div>
+                                        {proj.technologies && (
+                                            <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                                                Tech Stack: <span className="text-slate-500">{proj.technologies}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>

@@ -36,6 +36,7 @@ export default function ProfileSection({ data, onSave, isSaving }) {
             placeholder="e.g. Alexander Pierce"
             value={form.name || ""}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
+            onBlur={handleSave}
           />
         </div>
 
@@ -47,6 +48,7 @@ export default function ProfileSection({ data, onSave, isSaving }) {
             placeholder="e.g. Senior Software Engineer"
             value={form.title || ""}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
+            onBlur={handleSave}
           />
         </div>
 
@@ -58,6 +60,7 @@ export default function ProfileSection({ data, onSave, isSaving }) {
             placeholder="hello@alexander.com"
             value={form.email || ""}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
+            onBlur={handleSave}
           />
         </div>
 
@@ -69,6 +72,7 @@ export default function ProfileSection({ data, onSave, isSaving }) {
             placeholder="Briefly describe your background and key strengths..."
             value={form.about || ""}
             onChange={(e) => setForm({ ...form, about: e.target.value })}
+            onBlur={handleSave}
           />
         </div>
       </div>

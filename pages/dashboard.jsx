@@ -2,18 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { API } from '@/config';
+import { API } from '../config';
 import { signOut } from 'next-auth/react';
-import ProfileSection from '@/components/ProfileSection';
-import SkillsSection from '@/components/Skills';
-import ExperienceSection from '@/components/Experience';
-import EducationSection from '@/components/Education';
-import ProjectsSection from '@/components/Projects';
-import CertificationsSection from '@/components/Certifications';
-import GenerateResume from '@/components/GenerateResume';
-import UserResume from '@/components/UserResume';
-import Sidebar from '@/components/Sidebar';
-import SocialsSection from '@/components/Socials';
+import ProfileSection from '../components/ProfileSection';
+import SkillsSection from '../components/Skills';
+import ExperienceSection from '../components/Experience';
+import EducationSection from '../components/Education';
+import ProjectsSection from '../components/Projects';
+import CertificationsSection from '../components/Certifications';
+import GenerateResume from '../components/GenerateResume';
+import UserResume from '../components/UserResume';
+import Sidebar from '../components/Sidebar';
+import SocialsSection from '../components/Socials';
+import ProjectExperienceSection from '../components/ProjectExperience';
 import { Toaster, toast } from 'react-hot-toast';
 
 export default function Dashboard() {
@@ -36,6 +37,7 @@ export default function Dashboard() {
     experience: [],
     education: [],
     projects: [],
+    projectExperience: [],
     certifications: [],
     social: []
   });
@@ -258,6 +260,7 @@ export default function Dashboard() {
                   {activeTab === 'experience' && <ExperienceSection data={userData.experience || []} onSave={saveToDatabase} isSaving={isSaving} />}
                   {activeTab === 'education' && <EducationSection data={userData.education || []} onSave={saveToDatabase} isSaving={isSaving} />}
                   {activeTab === 'projects' && <ProjectsSection data={userData.projects || []} onSave={saveToDatabase} isSaving={isSaving} />}
+                  {activeTab === 'projectExperience' && <ProjectExperienceSection data={userData.projectExperience || []} onSave={saveToDatabase} isSaving={isSaving} />}
                   {activeTab === 'social' && <SocialsSection data={userData.social || []} onSave={saveToDatabase} isSaving={isSaving} />}
                   {activeTab === 'certifications' && <CertificationsSection data={userData.certifications || []} onSave={saveToDatabase} isSaving={isSaving} />}
                   {activeTab === 'generate' && <GenerateResume data={userData} />}

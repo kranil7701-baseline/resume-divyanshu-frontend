@@ -5,7 +5,8 @@ export default function Sidebar({ activeTab, setActiveTab, userData, handleLogou
   const items = [
     { id: "profile", label: "Profile", Icon: User, color: "from-blue-500 to-cyan-400" },
     { id: "skills", label: "Skills", Icon: Star, color: "from-yellow-400 to-orange-500" },
-    { id: "experience", label: "Experience", Icon: Briefcase, color: "from-purple-500 to-indigo-500" },
+    { id: "experience", label: "Work", Icon: Briefcase, color: "from-purple-500 to-indigo-500" },
+    { id: "projectExperience", label: "Projects Exp", Icon: Zap, color: "from-blue-400 to-indigo-600" },
     { id: "education", label: "Education", Icon: BookOpen, color: "from-emerald-400 to-teal-500" },
     { id: "projects", label: "Projects", Icon: Layers, color: "from-pink-500 to-rose-500" },
     { id: "social", label: "Social", Icon: Globe, color: "from-cyan-400 to-blue-500" },

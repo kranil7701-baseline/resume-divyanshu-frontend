@@ -1,7 +1,7 @@
 import React from "react";
-import { Mail, Phone, MapPin, Linkedin, Link as LinkIcon, ExternalLink, Github, Youtube, Twitter } from "lucide-react";
+import { Mail, Phone, MapPin, Link as LinkIcon, Github, Linkedin, Youtube, Twitter } from "lucide-react";
 
-export default function Template1({ data, id, font = 'font-sans', color = '#2563eb' }) {
+export default function Template1({ data, id, font = 'font-sans', color = '#000000', pagePadding = 20, sectionSpacing = 24 }) {
     const { profile, experience, education, skills, projects, projectExperience, certifications, social } = data;
 
     const fontStyles = {
@@ -23,220 +23,204 @@ export default function Template1({ data, id, font = 'font-sans', color = '#2563
         return <LinkIcon size={12} />;
     };
 
-    const sectionTitleStyle = {
-        color: color,
-        borderColor: color
+    const headerBarStyle = {
+        backgroundColor: '#f3f4f6', // lighter gray-100
+        padding: '6px 16px',
+        borderRadius: '8px',
+        marginBottom: '12px',
+        marginTop: `${sectionSpacing}px`,
+        borderLeft: `4px solid ${color}`
     };
 
     return (
         <div
             id={id || "resume-preview"}
-            className="w-[210mm] min-h-[297mm] mx-auto bg-white p-[15mm] text-[#1f2937] leading-normal overflow-hidden"
-            style={{ fontFamily: activeFontFamily }}
+            className="w-[210mm] min-h-[297mm] mx-auto bg-white text-black leading-snug overflow-hidden"
+            style={{ fontFamily: activeFontFamily, padding: `${pagePadding}mm` }}
         >
             {/* Header */}
-            <header className="mb-10 text-center">
-                <h1 className="text-5xl font-black uppercase tracking-tight text-[#111827] mb-2" style={{ color: color }}>
-                    {profile?.name || "Your Name"}
+            <header className="mb-6">
+                <h1 className="text-4xl font-bold uppercase tracking-tight mb-1" style={{ color }}>
+                    {profile?.name || "YOUR NAME"}
                 </h1>
-                <p className="text-xl font-medium text-[#4b5563] tracking-widest uppercase mb-6">{profile?.title || "Professional Role"}</p>
+                <p className="text-xl font-bold text-black uppercase mb-4">{profile?.title || ""}</p>
 
-                <div className="flex flex-wrap justify-center gap-y-2 gap-x-6 text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-black font-medium">
+                    {profile?.location && (
+                        <span className="flex items-center gap-1">
+                            {profile.location}
+                        </span>
+                    )}
                     {profile?.phone && (
-                        <div className="flex items-center gap-1.5">
-                            <Phone size={10} style={{ color }} />
+                        <>
+                            <span className="text-gray-300">|</span>
                             <span>{profile.phone}</span>
-                        </div>
+                        </>
                     )}
                     {profile?.email && (
-                        <div className="flex items-center gap-1.5">
-                            <Mail size={10} style={{ color }} />
+                        <>
+                            <span className="text-gray-300">|</span>
                             <span>{profile.email}</span>
-                        </div>
-                    )}
-                    {profile?.location && (
-                        <div className="flex items-center gap-1.5">
-                            <MapPin size={10} style={{ color }} />
-                            <span>{profile.location}</span>
-                        </div>
+                        </>
                     )}
                     {profile?.website && (
-                        <div className="flex items-center gap-1.5">
-                            <LinkIcon size={10} style={{ color }} />
-                            <a href={profile.website} target="_blank" rel="noreferrer" className="hover:underline">Portfolio</a>
-                        </div>
+                        <>
+                            <span className="text-gray-300">|</span>
+                            <a href={profile.website} target="_blank" rel="noreferrer" className="hover:underline">{profile.website.replace(/^https?:\/\//, '')}</a>
+                        </>
                     )}
                 </div>
             </header>
 
-            <div className="grid grid-cols-12 gap-10">
-                {/* Main Content */}
-                <div className="col-span-8 space-y-10">
-                    {/* Profile */}
-                    {(profile?.summary || profile?.about) && (
-                        <section>
-                            <h2 className="text-sm font-black uppercase tracking-[0.2em] mb-4 border-b-2 pb-1" style={sectionTitleStyle}>
-                                Professional Profile
-                            </h2>
-                            <p className="text-slate-700 text-[11px] leading-relaxed text-justify italic opacity-90">
-                                "{profile.summary || profile.about}"
-                            </p>
-                        </section>
-                    )}
+            {/* Content with dynamic spacing */}
+            <div className="space-y-4">
+                {/* Summary */}
+                {(profile?.summary || profile?.about) && (
+                    <section>
+                        <div style={headerBarStyle}>
+                            <h2 className="text-[12px] font-extrabold uppercase tracking-widest" style={{ color }}>SUMMARY</h2>
+                        </div>
+                        <p className="text-[11px] leading-relaxed text-black text-justify px-3">
+                            {profile.summary || profile.about}
+                        </p>
+                    </section>
+                )}
 
-                    {/* Experience */}
-                    {experience?.length > 0 && (
-                        <section>
-                            <h2 className="text-sm font-black uppercase tracking-[0.2em] mb-4 border-b-2 pb-1" style={sectionTitleStyle}>
-                                Experience
-                            </h2>
-                            <div className="space-y-8">
-                                {experience.map((exp) => (
-                                    <div key={exp.id || Math.random()} className="relative">
-                                        <div className="flex justify-between items-baseline mb-1">
-                                            <h3 className="font-bold text-[#111827] text-sm uppercase tracking-tight">{exp.role}</h3>
-                                            <span className="text-[9px] text-slate-400 font-bold uppercase bg-slate-50 px-2 py-0.5 rounded border border-slate-100 italic">
-                                                {exp.start ? new Date(exp.start).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ''} —
-                                                {exp.end ? new Date(exp.end).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ' Present'}
-                                            </span>
-                                        </div>
-                                        <div className="text-[11px] font-bold text-slate-500 mb-2 uppercase tracking-wide">{exp.company}</div>
-                                        <div className="text-slate-600 text-[11px] leading-relaxed whitespace-pre-line pl-2 border-l-2 border-slate-100">
-                                            {exp.details}
-                                        </div>
+                {/* Skills */}
+                {skills?.length > 0 && (
+                    <section>
+                        <div style={headerBarStyle}>
+                            <h2 className="text-[12px] font-extrabold uppercase tracking-widest" style={{ color }}>TECHNICAL SKILLS</h2>
+                        </div>
+                        <div className="grid grid-cols-3 gap-y-2 px-3">
+                            {skills.map((skill, index) => (
+                                <div key={index} className="text-[11px] text-black">
+                                    {typeof skill === 'string' ? skill : skill.name}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Professional Experience */}
+                {experience?.length > 0 && (
+                    <section>
+                        <div style={headerBarStyle}>
+                            <h2 className="text-[12px] font-extrabold uppercase tracking-widest" style={{ color }}>PROFESSIONAL EXPERIENCE</h2>
+                        </div>
+                        <div className="space-y-6 px-3">
+                            {experience.map((exp) => (
+                                <div key={exp.id || Math.random()}>
+                                    <div className="flex justify-between items-baseline mb-1">
+                                        <h3 className="font-bold text-black text-[12px]">{exp.role}, {exp.company}</h3>
+                                        <span className="text-[11px] font-bold text-black">
+                                            {exp.start ? new Date(exp.start).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ''} —
+                                            {exp.end ? new Date(exp.end).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ' Present'}
+                                        </span>
                                     </div>
-                                ))}
-                            </div>
-                        </section>
-                    )}
-
-                    {/* Project Experience */}
-                    {projectExperience?.length > 0 && (
-                        <section>
-                            <h2 className="text-sm font-black uppercase tracking-[0.2em] mb-4 border-b-2 pb-1" style={sectionTitleStyle}>
-                                Project Experience
-                            </h2>
-                            <div className="space-y-8">
-                                {projectExperience.map((proj) => (
-                                    <div key={proj.id || Math.random()}>
-                                        <div className="flex justify-between items-baseline mb-1">
-                                            <h3 className="font-bold text-[#111827] text-sm uppercase tracking-tight">{proj.title}</h3>
-                                            <span className="text-[9px] text-slate-400 font-bold uppercase bg-slate-50 px-2 py-0.5 rounded border border-slate-100 italic">
-                                                {proj.start ? new Date(proj.start).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ''} —
-                                                {proj.end ? new Date(proj.end).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ' Present'}
-                                            </span>
-                                        </div>
-                                        <div className="text-[11px] font-bold text-slate-500 mb-2 uppercase tracking-wide">
-                                            {proj.client} {proj.role ? `| ${proj.role}` : ''}
-                                        </div>
-                                        <div className="text-slate-600 text-[11px] leading-relaxed whitespace-pre-line pl-2 border-l-2 border-slate-100 mb-2">
-                                            {proj.details}
-                                        </div>
-                                        {proj.technologies && (
-                                            <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
-                                                Tech Stack: <span className="text-slate-500">{proj.technologies}</span>
+                                    <div className="text-black text-[11px] leading-relaxed whitespace-pre-line list-disc ml-4">
+                                        {exp.details?.split('\n').map((line, i) => (
+                                            <div key={i} className="flex gap-2 mb-1">
+                                                <span className="shrink-0">•</span>
+                                                <span>{line.replace(/^[•*-]\s*/, '')}</span>
                                             </div>
-                                        )}
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
-                        </section>
-                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
-                    {/* Projects */}
-                    {projects?.length > 0 && (
-                        <section>
-                            <h2 className="text-sm font-black uppercase tracking-[0.2em] mb-4 border-b-2 pb-1" style={sectionTitleStyle}>
-                                Featured Projects
-                            </h2>
-                            <div className="grid grid-cols-1 gap-6">
-                                {projects.map((project) => (
-                                    <div key={project.id || Math.random()}>
-                                        <div className="flex justify-between items-baseline mb-1">
-                                            <h3 className="font-bold text-slate-800 text-[12px] uppercase">
-                                                {project.title}
-                                            </h3>
-                                            {project.link && (
-                                                <a href={project.link} target="_blank" className="text-slate-400 hover:text-indigo-600">
-                                                    <ExternalLink size={10} />
-                                                </a>
-                                            )}
-                                        </div>
-                                        <p className="text-slate-600 text-[11px] leading-relaxed">{project.description || project.desc}</p>
+                {/* Projects / Project Experience */}
+                {((projects && projects.length > 0) || (projectExperience && projectExperience.length > 0)) && (
+                    <section>
+                        <div style={headerBarStyle}>
+                            <h2 className="text-[12px] font-extrabold uppercase tracking-widest" style={{ color }}>PROJECTS</h2>
+                        </div>
+                        <div className="space-y-4 px-3">
+                            {/* Render projectExperience if exists */}
+                            {projectExperience?.map((proj) => (
+                                <div key={proj.id || Math.random()}>
+                                    <div className="flex justify-between items-baseline mb-1">
+                                        <h3 className="font-bold text-black text-[12px]">{proj.title} {proj.client ? `| ${proj.client}` : ''}</h3>
+                                        <span className="text-[11px] font-bold text-black">
+                                            {proj.start ? new Date(proj.start).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ''} —
+                                            {proj.end ? new Date(proj.end).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ' Present'}
+                                        </span>
                                     </div>
-                                ))}
-                            </div>
-                        </section>
-                    )}
-                </div>
-
-                {/* Sidebar */}
-                <div className="col-span-4 space-y-10">
-                    {/* Skills */}
-                    {skills?.length > 0 && (
-                        <section>
-                            <h2 className="text-sm font-black uppercase tracking-[0.2em] mb-4 border-b-2 pb-1" style={sectionTitleStyle}>
-                                Expertise
-                            </h2>
-                            <div className="flex flex-wrap gap-2">
-                                {skills.map((skill, index) => (
-                                    <span
-                                        key={index}
-                                        className="text-[10px] font-bold text-slate-600 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200"
-                                    >
-                                        {typeof skill === 'string' ? skill : skill.name}
-                                    </span>
-                                ))}
-                            </div>
-                        </section>
-                    )}
-
-                    {/* Education */}
-                    {education?.length > 0 && (
-                        <section>
-                            <h2 className="text-sm font-black uppercase tracking-[0.2em] mb-4 border-b-2 pb-1" style={sectionTitleStyle}>
-                                Education
-                            </h2>
-                            <div className="space-y-6">
-                                {education.map((edu) => (
-                                    <div key={edu.id || Math.random()}>
-                                        <h3 className="font-bold text-slate-800 text-[11px] uppercase leading-tight mb-1">{edu.school}</h3>
-                                        <div className="text-[11px] text-slate-500 font-medium mb-1">{edu.degree}</div>
-                                        <div className="text-[9px] text-slate-400 font-black uppercase tracking-widest italic">
-                                            {edu.start ? new Date(edu.start).getFullYear() : ''} —
-                                            {edu.end ? new Date(edu.end).getFullYear() : 'Present'}
-                                        </div>
+                                    <div className="text-black text-[11px] leading-relaxed px-1">
+                                        {proj.details || proj.description}
                                     </div>
-                                ))}
-                            </div>
-                        </section>
-                    )}
+                                </div>
+                            ))}
+                            {/* Render projects if exists and not already rendered as projectExperience */}
+                            {projects?.filter(p => !projectExperience?.some(pe => pe.title === p.title)).map((proj) => (
+                                <div key={proj.id || Math.random()}>
+                                    <div className="flex justify-between items-baseline mb-1">
+                                        <h3 className="font-bold text-black text-[12px]">{proj.title}</h3>
+                                        <span className="text-[11px] font-bold text-black uppercase">Project</span>
+                                    </div>
+                                    <div className="text-black text-[11px] leading-relaxed px-1">
+                                        {proj.description || proj.desc}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
-                    {/* Socials */}
-                    {social?.length > 0 && (
-                        <section>
-                            <h2 className="text-sm font-black uppercase tracking-[0.2em] mb-4 border-b-2 pb-1" style={sectionTitleStyle}>
-                                Social Connections
-                            </h2>
-                            <div className="space-y-3">
-                                {social.map((item, index) => (
-                                    <a
-                                        key={index}
-                                        href={item.url}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="flex items-center gap-3 group"
-                                    >
-                                        <div className="p-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 group-hover:text-indigo-600 transition-colors">
-                                            {getSocialIcon(item.network)}
-                                        </div>
-                                        <span className="text-[11px] font-bold text-slate-500 group-hover:underline">{item.network}</span>
-                                    </a>
-                                ))}
-                            </div>
-                        </section>
-                    )}
-                </div>
+                {/* Education */}
+                {education?.length > 0 && (
+                    <section>
+                        <div style={headerBarStyle}>
+                            <h2 className="text-[12px] font-extrabold uppercase tracking-widest" style={{ color }}>EDUCATION</h2>
+                        </div>
+                        <div className="space-y-4 px-3">
+                            {education.map((edu) => (
+                                <div key={edu.id || Math.random()}>
+                                    <div className="flex justify-between items-baseline mb-1">
+                                        <h3 className="font-bold text-black text-[12px]">{edu.degree}</h3>
+                                        <span className="text-[11px] font-bold text-black">
+                                            {edu.start ? new Date(edu.start).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ''} —
+                                            {edu.end ? new Date(edu.end).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ' Present'}
+                                        </span>
+                                    </div>
+                                    <div className="text-[11px] text-black italic">{edu.school}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Additional Information */}
+                {(certifications?.length > 0 || social?.length > 0) && (
+                    <section>
+                        <div style={headerBarStyle}>
+                            <h2 className="text-[12px] font-extrabold uppercase tracking-widest" style={{ color }}>ADDITIONAL INFORMATION</h2>
+                        </div>
+                        <div className="space-y-2 px-3 text-[11px]">
+                            {certifications?.length > 0 && (
+                                <div className="flex gap-2">
+                                    <span className="font-bold shrink-0">Certifications:</span>
+                                    <span>{certifications.map(c => c.name).join(', ')}</span>
+                                </div>
+                            )}
+                            {social?.length > 0 && (
+                                <div className="flex gap-2">
+                                    <span className="font-bold shrink-0">Links:</span>
+                                    <div className="flex flex-wrap gap-x-4">
+                                        {social.map((s, i) => (
+                                            <a key={i} href={s.url} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:underline">
+                                                {getSocialIcon(s.network)} {s.network}
+                                            </a>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </section>
+                )}
             </div>
         </div>
     );

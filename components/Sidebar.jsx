@@ -16,15 +16,15 @@ export default function Sidebar({ activeTab, setActiveTab, userData, handleLogou
   ];
 
   return (
-    <aside className="w-24 lg:w-[100px] h-screen bg-white/5 border-r border-white/10 flex flex-col items-center py-8 gap-8 backdrop-blur-xl relative z-20 transition-all duration-300">
+    <aside className="w-20 lg:w-[80px] h-screen bg-white/5 border-r border-white/10 flex flex-col items-center py-6 gap-6 backdrop-blur-xl relative z-20 transition-all duration-300">
       {/* Brand Icon */}
       <div className="relative group shrink-0">
-        <div className="h-14 w-14 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(79,70,229,0.3)] group-hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transition-all transform group-hover:rotate-12">
-          <Zap className="text-white w-7 h-7 fill-white/20" />
+        <div className="h-12 w-12 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(79,70,229,0.3)] group-hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] transition-all transform group-hover:rotate-12">
+          <Zap className="text-white w-6 h-6 fill-white/20" />
         </div>
       </div>
 
-      <div className="w-10 h-px bg-white/10 shrink-0" />
+      <div className="w-8 h-px bg-white/10 shrink-0" />
 
       {/* Navigation */}
       <nav className="flex flex-col gap-5 flex-grow overflow-y-auto custom-sidebar-scrollbar py-4 px-2 w-full">
@@ -42,15 +42,15 @@ export default function Sidebar({ activeTab, setActiveTab, userData, handleLogou
                 }`}
             >
               {/* Active Indicator Tooltip (Optional, can be seen as label below) */}
-              <div className={`p-2.5 rounded-xl transition-all duration-300 
+              <div className={`p-2 rounded-lg transition-all duration-300 
                 ${isActive
                   ? `bg-gradient-to-br ${color} shadow-lg shadow-indigo-500/20`
                   : "bg-slate-800/50 group-hover:bg-slate-700/50 text-slate-500 group-hover:text-slate-300"}`}
               >
-                <Icon className={`w-5 h-5 ${isActive ? "text-white" : ""}`} />
+                <Icon className={`w-4 h-4 ${isActive ? "text-white" : ""}`} />
               </div>
 
-              <span className={`text-[9px] font-bold mt-2 uppercase tracking-tight transition-all
+              <span className={`text-[8px] font-bold mt-1.5 uppercase tracking-tight transition-all
                 ${isActive ? "text-indigo-400" : "text-slate-500 group-hover:text-slate-300"}`}>
                 {label}
               </span>
@@ -68,8 +68,8 @@ export default function Sidebar({ activeTab, setActiveTab, userData, handleLogou
 
       {/* Profile Info (Icon only, no logout) */}
       <div className="flex flex-col gap-6 pb-4 shrink-0">
-        <div className="w-10 h-10 rounded-full bg-slate-800 border-2 border-white/5 flex items-center justify-center overflow-hidden ring-2 ring-indigo-500/20 shadow-lg">
-          <span className="text-sm font-bold text-indigo-400 uppercase">{userData?.name ? userData.name[0] : userData?.profile?.name ? userData.profile.name[0] : "U"}</span>
+        <div className="w-8 h-8 rounded-full bg-slate-800 border border-white/5 flex items-center justify-center overflow-hidden ring-2 ring-indigo-500/20 shadow-lg">
+          <span className="text-xs font-bold text-indigo-400 uppercase">{userData?.name ? userData.name[0] : userData?.profile?.name ? userData.profile.name[0] : "U"}</span>
         </div>
       </div>
 

@@ -223,7 +223,9 @@ export default function Dashboard() {
                   <div className="flex items-center gap-3">
                     <div className="text-right hidden sm:block">
                       <p className="text-[11px] font-bold text-white leading-none">{user?.name || "User"}</p>
-                      <p className="text-[9px] text-slate-500 mt-0.5">Creator Account</p>
+                      <p className="text-[9px] mt-0.5 font-bold uppercase tracking-wider text-slate-500">
+                        Free Account
+                      </p>
                     </div>
                     <div className="w-8 h-8 rounded-full bg-slate-800 border border-white/5 flex items-center justify-center overflow-hidden ring-2 ring-indigo-500/20 shadow-lg">
                       <span className="text-xs font-bold text-indigo-400 uppercase">{user?.name ? user.name[0] : "U"}</span>

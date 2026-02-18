@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Check, CreditCard, Shield, Zap, QrCode, Smartphone, X, Loader2 } from "lucide-react";
+import { API } from "@/config";
 
-export default function Subscription() {
+export default function Subscription({ currentSubscription }) {
     const [selectedPlan, setSelectedPlan] = useState("monthly");
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState(null);
@@ -44,7 +45,8 @@ export default function Subscription() {
         setPaymentMethod(method);
         setIsPaymentModalOpen(true);
         setIsProcessing(true);
-        // Simulate gateway initialization
+
+        // Simulate a small delay for the "processing" state
         setTimeout(() => {
             setIsProcessing(false);
         }, 1500);
@@ -105,12 +107,15 @@ export default function Subscription() {
 
                         <button
                             onClick={() => setSelectedPlan(plan.id)}
-                            className={`w-full py-4 rounded-2xl font-bold text-sm transition-all active:scale-95 ${selectedPlan === plan.id
-                                ? "bg-indigo-600 text-white shadow-xl shadow-indigo-600/20"
-                                : "bg-white/5 text-slate-300 hover:bg-white/10"
+                            disabled={currentSubscription?.plan === plan.id && currentSubscription?.status === 'active'}
+                            className={`w-full py-4 rounded-2xl font-bold text-sm transition-all active:scale-95 ${currentSubscription?.plan === plan.id && currentSubscription?.status === 'active'
+                                ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 cursor-default"
+                                : selectedPlan === plan.id
+                                    ? "bg-indigo-600 text-white shadow-xl shadow-indigo-600/20"
+                                    : "bg-white/5 text-slate-300 hover:bg-white/10"
                                 }`}
                         >
-                            Select {plan.name}
+                            {currentSubscription?.plan === plan.id && currentSubscription?.status === 'active' ? 'Active Plan' : `Select ${plan.name}`}
                         </button>
                     </div>
                 ))}
@@ -240,7 +245,7 @@ export default function Subscription() {
 
                                     <button
                                         onClick={() => {
-                                            alert("This is a demo payment flow. In production, this would process your payment.");
+                                            alert("This is a demo payment flow. Your account will be upgraded shortly.");
                                             closePaymentModal();
                                         }}
                                         className="w-full py-4 rounded-2xl bg-indigo-600 text-white font-bold text-sm shadow-xl shadow-indigo-600/20 hover:bg-indigo-500 transition-all active:scale-[0.98]"

@@ -1,7 +1,9 @@
 // components/Sidebar.js
-import { User, Layers, Briefcase, BookOpen, Star, Award, ChevronRight, FileText, Zap, Globe, LogOut, CreditCard } from "lucide-react";
+import { User, Layers, Briefcase, BookOpen, Star, Award, ChevronRight, FileText, Zap, Globe, LogOut, CreditCard, Palette } from "lucide-react";
+import { useRouter } from "next/router";
 
 export default function Sidebar({ activeTab, setActiveTab, userData, handleLogout }) {
+  const router = useRouter();
   const items = [
     { id: "profile", label: "Profile", Icon: User, color: "from-blue-500 to-cyan-400" },
     { id: "skills", label: "Skills", Icon: Star, color: "from-yellow-400 to-orange-500" },
@@ -12,7 +14,9 @@ export default function Sidebar({ activeTab, setActiveTab, userData, handleLogou
     { id: "social", label: "Social", Icon: Globe, color: "from-cyan-400 to-blue-500" },
     { id: "certifications", label: "Certifications", Icon: Award, color: "from-indigo-400 to-violet-500" },
     { id: "userresume", label: "Preview", Icon: Zap, color: "from-orange-400 to-red-500" },
+    { id: "customizer", label: "Theme", Icon: Palette, color: "from-pink-400 to-fuchsia-500" },
     { id: "generate", label: "Build", Icon: FileText, color: "from-slate-400 to-slate-600" },
+    { id: "generated_history", label: "History", Icon: CreditCard, color: "from-green-400 to-emerald-500" },
   ];
 
   return (
@@ -34,7 +38,13 @@ export default function Sidebar({ activeTab, setActiveTab, userData, handleLogou
           return (
             <button
               key={id}
-              onClick={() => setActiveTab(id)}
+              onClick={() => {
+                if (id === "customizer") {
+                  router.push("/theme-customizer");
+                } else {
+                  setActiveTab(id);
+                }
+              }}
               className={`group relative flex flex-col items-center justify-center p-3 rounded-2xl transition-all duration-500
                 ${isActive
                   ? "bg-indigo-500/10 shadow-[inset_0_0_15px_rgba(99,102,241,0.2)]"

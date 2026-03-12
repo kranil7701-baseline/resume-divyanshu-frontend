@@ -5,18 +5,19 @@ import Template3 from "./templates/Template3";
 import Template4 from "./templates/Template4";
 import Template5 from "./templates/Template5";
 
-export default function ResumePreview({ data, template = 'template1', font, color, pagePadding, sectionSpacing, id }) {
+export default function ResumePreview({ data, template = 'template1', font, color, pagePadding, sectionSpacing, id, h2Size, h3Size, h2Padding, h3Padding, h2Color, h3Color, pSize, pPadding, pColor }) {
+    const props = { data, font, color, pagePadding, sectionSpacing, id, h2Size, h3Size, h2Padding, h3Padding, h2Color, h3Color, pSize, pPadding, pColor };
     switch (template) {
         case 'template2':
-            return <Template2 data={data} font={font} color={color} pagePadding={pagePadding} sectionSpacing={sectionSpacing} id={id} />;
+            return <Template2 {...props} />;
         case 'template3':
-            return <Template3 data={data} font={font} color={color} pagePadding={pagePadding} sectionSpacing={sectionSpacing} id={id} />;
+            return <Template3 {...props} />;
         case 'template4':
-            return <Template4 data={data} font={font} color={color} pagePadding={pagePadding} sectionSpacing={sectionSpacing} id={id} />;
+            return <Template4 {...props} />;
         case 'template5':
-            return <Template5 data={data} font={font} color={color} pagePadding={pagePadding} sectionSpacing={sectionSpacing} id={id} />;
+            return <Template5 {...props} />;
         case 'template1':
         default:
-            return <Template1 data={data} font={font} color={color} pagePadding={pagePadding} sectionSpacing={sectionSpacing} id={id} />;
+            return <Template1 {...props} />;
     }
 }

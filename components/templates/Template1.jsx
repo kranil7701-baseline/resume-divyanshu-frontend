@@ -1,7 +1,7 @@
 import React from "react";
 import { Mail, Phone, MapPin, Link as LinkIcon, Github, Linkedin, Youtube, Twitter } from "lucide-react";
 
-export default function Template1({ data, id, font = 'font-sans', color = '#000000', pagePadding = 20, sectionSpacing = 24 }) {
+export default function Template1({ data, id, font = 'font-sans', color = '#000000', pagePadding = 20, sectionSpacing = 24, h2Size, h3Size, h2Padding, h3Padding, h2Color, h3Color, pSize, pPadding, pColor }) {
     const { profile, experience, education, skills, projects, projectExperience, certifications, social } = data;
 
     const fontStyles = {
@@ -25,17 +25,34 @@ export default function Template1({ data, id, font = 'font-sans', color = '#0000
 
     const headerBarStyle = {
         backgroundColor: '#f3f4f6', // lighter gray-100
-        padding: '6px 16px',
+        padding: `${h2Padding || 6}px 16px`,
         borderRadius: '8px',
         marginBottom: '12px',
         marginTop: `${sectionSpacing}px`,
-        borderLeft: `4px solid ${color}`
+        borderLeft: `4px solid ${h2Color || color}`
+    };
+
+    const h2Style = {
+        fontSize: h2Size ? `${h2Size}px` : '12px',
+        color: h2Color || color
+    };
+
+    const h3Style = {
+        fontSize: h3Size ? `${h3Size}px` : '12px',
+        color: h3Color || '#000000',
+        paddingBottom: h3Padding ? `${h3Padding}px` : '0px'
+    };
+
+    const pStyle = {
+        fontSize: pSize ? `${pSize}px` : '11px',
+        color: pColor || '#000000',
+        paddingBottom: pPadding ? `${pPadding}px` : '0px'
     };
 
     return (
         <div
             id={id || "resume-preview"}
-            className="w-[210mm] min-h-[297mm] mx-auto bg-white text-black leading-snug overflow-hidden"
+            className="w-full bg-white text-black leading-snug"
             style={{ fontFamily: activeFontFamily, padding: `${pagePadding}mm` }}
         >
             {/* Header */}
@@ -73,14 +90,14 @@ export default function Template1({ data, id, font = 'font-sans', color = '#0000
             </header>
 
             {/* Content with dynamic spacing */}
-            <div className="space-y-4">
+            <div className="resume-content">
                 {/* Summary */}
                 {(profile?.summary || profile?.about) && (
-                    <section>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
                         <div style={headerBarStyle}>
-                            <h2 className="text-[12px] font-extrabold uppercase tracking-widest" style={{ color }}>SUMMARY</h2>
+                            <h2 className="font-extrabold uppercase tracking-widest" style={h2Style}>SUMMARY</h2>
                         </div>
-                        <p className="text-[11px] leading-relaxed text-black text-justify px-3">
+                        <p className="leading-relaxed text-justify px-3" style={pStyle}>
                             {profile.summary || profile.about}
                         </p>
                     </section>
@@ -88,15 +105,15 @@ export default function Template1({ data, id, font = 'font-sans', color = '#0000
 
                 {/* Skills */}
                 {skills?.length > 0 && (
-                    <section>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
                         <div style={headerBarStyle}>
-                            <h2 className="text-[12px] font-extrabold uppercase tracking-widest" style={{ color }}>TECHNICAL SKILLS</h2>
+                            <h2 className="font-extrabold uppercase tracking-widest" style={h2Style}>TECHNICAL SKILLS</h2>
                         </div>
                         <div className="grid grid-cols-3 gap-y-2 px-3">
                             {skills.map((skill, index) => (
-                                <div key={index} className="text-[11px] text-black">
+                                <p key={index} className="text-black" style={pStyle}>
                                     {typeof skill === 'string' ? skill : skill.name}
-                                </div>
+                                </p>
                             ))}
                         </div>
                     </section>
@@ -104,23 +121,23 @@ export default function Template1({ data, id, font = 'font-sans', color = '#0000
 
                 {/* Professional Experience */}
                 {experience?.length > 0 && (
-                    <section>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
                         <div style={headerBarStyle}>
-                            <h2 className="text-[12px] font-extrabold uppercase tracking-widest" style={{ color }}>PROFESSIONAL EXPERIENCE</h2>
+                            <h2 className="font-extrabold uppercase tracking-widest" style={h2Style}>PROFESSIONAL EXPERIENCE</h2>
                         </div>
                         <div className="space-y-6 px-3">
                             {experience.map((exp) => (
                                 <div key={exp.id || Math.random()}>
                                     <div className="flex justify-between items-baseline mb-1">
-                                        <h3 className="font-bold text-black text-[12px]">{exp.role}, {exp.company}</h3>
-                                        <span className="text-[11px] font-bold text-black">
+                                        <h3 className="font-bold" style={h3Style}>{exp.role}, {exp.company}</h3>
+                                        <span style={pStyle} className="font-bold">
                                             {exp.start ? new Date(exp.start).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ''} —
                                             {exp.end ? new Date(exp.end).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ' Present'}
                                         </span>
                                     </div>
-                                    <div className="text-black text-[11px] leading-relaxed whitespace-pre-line list-disc ml-4">
+                                    <div className="leading-relaxed whitespace-pre-line list-disc ml-4">
                                         {exp.details?.split('\n').map((line, i) => (
-                                            <div key={i} className="flex gap-2 mb-1">
+                                            <div key={i} className="flex gap-2 mb-1" style={pStyle}>
                                                 <span className="shrink-0">•</span>
                                                 <span>{line.replace(/^[•*-]\s*/, '')}</span>
                                             </div>
@@ -134,36 +151,36 @@ export default function Template1({ data, id, font = 'font-sans', color = '#0000
 
                 {/* Projects / Project Experience */}
                 {((projects && projects.length > 0) || (projectExperience && projectExperience.length > 0)) && (
-                    <section>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
                         <div style={headerBarStyle}>
-                            <h2 className="text-[12px] font-extrabold uppercase tracking-widest" style={{ color }}>PROJECTS</h2>
+                            <h2 className="font-extrabold uppercase tracking-widest" style={h2Style}>PROJECTS</h2>
                         </div>
                         <div className="space-y-4 px-3">
                             {/* Render projectExperience if exists */}
                             {projectExperience?.map((proj) => (
                                 <div key={proj.id || Math.random()}>
                                     <div className="flex justify-between items-baseline mb-1">
-                                        <h3 className="font-bold text-black text-[12px]">{proj.title} {proj.client ? `| ${proj.client}` : ''}</h3>
-                                        <span className="text-[11px] font-bold text-black">
+                                        <h3 className="font-bold" style={h3Style}>{proj.title} {proj.client ? `| ${proj.client}` : ''}</h3>
+                                        <span style={pStyle} className="font-bold">
                                             {proj.start ? new Date(proj.start).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ''} —
                                             {proj.end ? new Date(proj.end).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ' Present'}
                                         </span>
                                     </div>
-                                    <div className="text-black text-[11px] leading-relaxed px-1">
+                                    <p className="leading-relaxed px-1" style={pStyle}>
                                         {proj.details || proj.description}
-                                    </div>
+                                    </p>
                                 </div>
                             ))}
                             {/* Render projects if exists and not already rendered as projectExperience */}
                             {projects?.filter(p => !projectExperience?.some(pe => pe.title === p.title)).map((proj) => (
                                 <div key={proj.id || Math.random()}>
                                     <div className="flex justify-between items-baseline mb-1">
-                                        <h3 className="font-bold text-black text-[12px]">{proj.title}</h3>
+                                        <h3 className="font-bold" style={h3Style}>{proj.title}</h3>
                                         <span className="text-[11px] font-bold text-black uppercase">Project</span>
                                     </div>
-                                    <div className="text-black text-[11px] leading-relaxed px-1">
+                                    <p className="leading-relaxed px-1" style={pStyle}>
                                         {proj.description || proj.desc}
-                                    </div>
+                                    </p>
                                 </div>
                             ))}
                         </div>
@@ -172,21 +189,24 @@ export default function Template1({ data, id, font = 'font-sans', color = '#0000
 
                 {/* Education */}
                 {education?.length > 0 && (
-                    <section>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
                         <div style={headerBarStyle}>
-                            <h2 className="text-[12px] font-extrabold uppercase tracking-widest" style={{ color }}>EDUCATION</h2>
+                            <h2 className="font-extrabold uppercase tracking-widest" style={h2Style}>EDUCATION</h2>
                         </div>
                         <div className="space-y-4 px-3">
                             {education.map((edu) => (
                                 <div key={edu.id || Math.random()}>
                                     <div className="flex justify-between items-baseline mb-1">
-                                        <h3 className="font-bold text-black text-[12px]">{edu.degree}</h3>
-                                        <span className="text-[11px] font-bold text-black">
+                                        <h3 className="font-bold" style={h3Style}>{edu.degree}</h3>
+                                        <span style={pStyle} className="font-bold">
                                             {edu.start ? new Date(edu.start).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ''} —
                                             {edu.end ? new Date(edu.end).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ' Present'}
                                         </span>
                                     </div>
-                                    <div className="text-[11px] text-black italic">{edu.school}</div>
+                                    <div className="flex justify-between items-baseline" style={pStyle}>
+                                        <div className="italic">{edu.school}</div>
+                                        {edu.grade && <div className="font-bold">Grade: {edu.grade}</div>}
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -195,19 +215,19 @@ export default function Template1({ data, id, font = 'font-sans', color = '#0000
 
                 {/* Additional Information */}
                 {(certifications?.length > 0 || social?.length > 0) && (
-                    <section>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
                         <div style={headerBarStyle}>
-                            <h2 className="text-[12px] font-extrabold uppercase tracking-widest" style={{ color }}>ADDITIONAL INFORMATION</h2>
+                            <h2 className="font-extrabold uppercase tracking-widest" style={h2Style}>ADDITIONAL INFORMATION</h2>
                         </div>
-                        <div className="space-y-2 px-3 text-[11px]">
+                        <div className="space-y-2 px-3">
                             {certifications?.length > 0 && (
-                                <div className="flex gap-2">
+                                <div className="flex gap-2" style={pStyle}>
                                     <span className="font-bold shrink-0">Certifications:</span>
                                     <span>{certifications.map(c => c.name).join(', ')}</span>
                                 </div>
                             )}
                             {social?.length > 0 && (
-                                <div className="flex gap-2">
+                                <div className="flex gap-2" style={pStyle}>
                                     <span className="font-bold shrink-0">Links:</span>
                                     <div className="flex flex-wrap gap-x-4">
                                         {social.map((s, i) => (

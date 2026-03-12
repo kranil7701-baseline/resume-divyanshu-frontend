@@ -1,7 +1,7 @@
 import React from "react";
 import { Mail, Phone, MapPin, Link as LinkIcon, Github, Linkedin, Youtube, Twitter } from "lucide-react";
 
-export default function Template5({ data, id, font = 'font-serif', color = '#000000', pagePadding = 20, sectionSpacing = 24 }) {
+export default function Template5({ data, id, font = 'font-serif', color = '#000000', pagePadding = 20, sectionSpacing = 24, h2Size, h3Size, h2Padding, h3Padding, h2Color, h3Color, pSize, pPadding, pColor }) {
     const { profile, experience, education, skills, projects, projectExperience, certifications, social } = data;
 
     const fontStyles = {
@@ -21,10 +21,35 @@ export default function Template5({ data, id, font = 'font-serif', color = '#000
         return <LinkIcon size={10} />;
     };
 
+
+    const h2Style = {
+        fontSize: h2Size ? `${h2Size}px` : '11px',
+        color: h2Color || '#000000',
+        paddingBottom: `${h2Padding || 0.5}px`,
+        marginBottom: '8px',
+        borderBottom: `1px solid ${h2Color || '#000000'}`,
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em'
+    };
+
+    const h3Style = {
+        fontSize: h3Size ? `${h3Size}px` : '12px',
+        color: h3Color || '#000000',
+        paddingBottom: h3Padding ? `${h3Padding}px` : '0px',
+        fontWeight: 'bold'
+    };
+
+    const pStyle = {
+        fontSize: pSize ? `${pSize}px` : '11px',
+        color: pColor || '#000000',
+        paddingBottom: pPadding ? `${pPadding}px` : '0px'
+    };
+
     return (
         <div
             id={id || "resume-preview"}
-            className="w-[210mm] min-h-[297mm] mx-auto bg-white text-black leading-tight overflow-hidden text-[12px]"
+            className="w-full bg-white text-black leading-tight text-[12px]"
             style={{ fontFamily: activeFontFamily, padding: `${pagePadding}mm` }}
         >
             {/* Header */}
@@ -66,12 +91,12 @@ export default function Template5({ data, id, font = 'font-serif', color = '#000
                 <div className="mt-2 border-b border-black w-full"></div>
             </header>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: `${sectionSpacing}px` }}>
+            <div className="resume-content">
                 {/* Summary / Profile */}
                 {(profile?.summary || profile?.about) && (
-                    <section>
-                        <h2 className="text-[11px] font-bold uppercase tracking-wider border-b border-black mb-2 pb-0.5">PROFILE</h2>
-                        <p className="text-[11px] leading-relaxed text-black text-justify">
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                        <h2 style={h2Style}>PROFILE</h2>
+                        <p className="leading-relaxed text-black text-justify" style={pStyle}>
                             {profile.summary || profile.about}
                         </p>
                     </section>
@@ -79,25 +104,25 @@ export default function Template5({ data, id, font = 'font-serif', color = '#000
 
                 {/* Work Experience */}
                 {experience?.length > 0 && (
-                    <section>
-                        <h2 className="text-[11px] font-bold uppercase tracking-wider border-b border-black mb-2 pb-0.5">WORK EXPERIENCE</h2>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                        <h2 style={h2Style}>WORK EXPERIENCE</h2>
                         <div className="space-y-4">
                             {experience.map((exp, idx) => (
                                 <div key={idx}>
                                     <div className="flex justify-between items-baseline font-bold italic">
                                         <div className="flex flex-col text-black">
-                                            <span className="not-italic font-bold">{exp.company}</span>
-                                            <span className="text-[11px] font-medium">{exp.role}</span>
+                                            <span className="not-italic" style={h3Style}>{exp.company}</span>
+                                            <span style={pStyle} className="font-medium">{exp.role}</span>
                                         </div>
                                         <div className="text-right flex flex-col text-black">
-                                            <span>
+                                            <span style={pStyle}>
                                                 {exp.start ? new Date(exp.start).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ''} —
                                                 {exp.end ? new Date(exp.end).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ' Present'}
                                             </span>
-                                            {exp.location && <span className="text-[10px] font-normal italic">{exp.location}</span>}
+                                            {exp.location && <span style={pStyle} className="font-normal italic">{exp.location}</span>}
                                         </div>
                                     </div>
-                                    <ul className="mt-1 ml-4 list-disc space-y-0.5 text-[11px]">
+                                    <ul className="mt-1 ml-4 list-disc space-y-0.5" style={pStyle}>
                                         {exp.details?.split('\n').map((line, i) => (
                                             <li key={i}>{line.replace(/^[•*-]\s*/, '')}</li>
                                         ))}
@@ -110,23 +135,23 @@ export default function Template5({ data, id, font = 'font-serif', color = '#000
 
                 {/* Projects */}
                 {((projects && projects.length > 0) || (projectExperience && projectExperience.length > 0)) && (
-                    <section>
-                        <h2 className="text-[11px] font-bold uppercase tracking-wider border-b border-black mb-2 pb-0.5">PROJECTS</h2>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                        <h2 style={h2Style}>PROJECTS</h2>
                         <div className="space-y-3">
                             {projectExperience?.map((proj, idx) => (
                                 <div key={idx}>
                                     <div className="flex justify-between items-baseline font-bold italic">
                                         <div className="flex flex-col text-black">
-                                            <span className="not-italic font-bold">{proj.title}</span>
+                                            <span className="not-italic" style={h3Style}>{proj.title}</span>
                                         </div>
                                         <div className="text-right text-black">
-                                            <span>
+                                            <span style={pStyle}>
                                                 {proj.start ? new Date(proj.start).getFullYear() : ''}
                                                 {proj.end ? ` — ${new Date(proj.end).getFullYear()}` : ''}
                                             </span>
                                         </div>
                                     </div>
-                                    <ul className="mt-0.5 ml-4 list-disc space-y-0.5 text-[11px]">
+                                    <ul className="mt-0.5 ml-4 list-disc space-y-0.5" style={pStyle}>
                                         {(proj.details || proj.description)?.split('\n').map((line, i) => (
                                             <li key={i}>{line.replace(/^[•*-]\s*/, '')}</li>
                                         ))}
@@ -136,10 +161,10 @@ export default function Template5({ data, id, font = 'font-serif', color = '#000
                             {projects?.filter(p => !projectExperience?.some(pe => pe.title === p.title)).map((proj, idx) => (
                                 <div key={idx}>
                                     <div className="font-bold italic text-black">
-                                        <span className="not-italic font-bold">{proj.title}</span>
+                                        <span className="not-italic" style={h3Style}>{proj.title}</span>
                                     </div>
-                                    <p className="mt-0.5 text-[11px] italic leading-tight text-gray-700">{proj.description || proj.desc}</p>
-                                    {proj.link && <a href={proj.link} className="text-[10px] text-blue-700 hover:underline">Project Link</a>}
+                                    <p className="mt-0.5 italic leading-tight" style={pStyle}>{proj.description || proj.desc}</p>
+                                    {proj.link && <a href={proj.link} className="text-[10px] text-blue-700 hover:underline" style={pStyle}>Project Link</a>}
                                 </div>
                             ))}
                         </div>
@@ -148,24 +173,24 @@ export default function Template5({ data, id, font = 'font-serif', color = '#000
 
                 {/* Education */}
                 {education?.length > 0 && (
-                    <section>
-                        <h2 className="text-[11px] font-bold uppercase tracking-wider border-b border-black mb-2 pb-0.5">EDUCATION</h2>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                        <h2 style={h2Style}>EDUCATION</h2>
                         <div className="space-y-3">
                             {education.map((edu, idx) => (
                                 <div key={idx}>
                                     <div className="flex justify-between items-baseline font-bold italic">
                                         <div className="flex flex-col text-black">
-                                            <span className="not-italic font-bold">{edu.school}</span>
-                                            <span className="text-[11px] font-medium">{edu.degree}</span>
+                                            <span className="not-italic" style={h3Style}>{edu.school}</span>
+                                            <span style={pStyle} className="font-medium">{edu.degree}</span>
                                         </div>
                                         <div className="text-right flex flex-col text-black">
-                                            <span>
+                                            <span style={pStyle}>
                                                 {edu.end ? new Date(edu.end).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : 'Present'}
                                             </span>
                                             {edu.location && <span className="text-[10px] font-normal italic">{edu.location}</span>}
                                         </div>
                                     </div>
-                                    {edu.details && <p className="mt-1 ml-4 text-[11px] text-gray-700 italic">{edu.details}</p>}
+                                    {edu.details && <p className="mt-1 ml-4 italic" style={pStyle}>{edu.details}</p>}
                                 </div>
                             ))}
                         </div>
@@ -173,9 +198,9 @@ export default function Template5({ data, id, font = 'font-serif', color = '#000
                 )}
 
                 {/* Skills & Certifications */}
-                <section>
-                    <h2 className="text-[11px] font-bold uppercase tracking-wider border-b border-black mb-2 pb-0.5">CERTIFICATIONS, SKILLS & INTERESTS</h2>
-                    <ul className="ml-4 list-disc space-y-1 text-[11px]">
+                <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                    <h2 style={h2Style}>CERTIFICATIONS, SKILLS & INTERESTS</h2>
+                    <ul className="ml-4 list-disc space-y-1" style={pStyle}>
                         {certifications?.length > 0 && (
                             <li>
                                 <span className="font-bold">Certifications: </span>

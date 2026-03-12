@@ -1,12 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check, CreditCard, Shield, Zap, QrCode, Smartphone, X, Loader2 } from "lucide-react";
+import Script from 'next/script';
+import { loadStripe } from '@stripe/stripe-js';
 import { API } from "@/config";
+import { useSession } from "next-auth/react";
+import { toast } from "react-hot-toast";
 
 export default function Subscription({ currentSubscription }) {
     const [selectedPlan, setSelectedPlan] = useState("monthly");
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [subscription, setSubscription] = useState(currentSubscription);
+    const { data: session } = useSession();
+
+    useEffect(() => {
+        if (!subscription && session) {
+            fetchSubscription();
+        }
+    }, [session]);
+
+    const fetchSubscription = async () => {
+        try {
+            const token = session?.backendToken || localStorage.getItem('token');
+            if (!token) return;
+
+            const res = await fetch(`${API}/api/payment/subscription`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+            if (!data.error) {
+                setSubscription(data);
+            }
+        } catch (err) {
+            console.error("Error fetching subscription:", err);
+        }
+    };
 
     const plans = [
         {
@@ -41,7 +72,22 @@ export default function Subscription({ currentSubscription }) {
         }
     ];
 
-    const handlePaymentInitiation = (method) => {
+    const handlePaymentInitiation = async (method) => {
+        if (!session) {
+            toast.error("Please sign in to upgrade your account");
+            return;
+        }
+
+        if (method === "Razorpay") {
+            handleRazorpayPayment();
+            return;
+        }
+
+        if (method === "Stripe") {
+            handleStripePayment();
+            return;
+        }
+
         setPaymentMethod(method);
         setIsPaymentModalOpen(true);
         setIsProcessing(true);
@@ -52,6 +98,102 @@ export default function Subscription({ currentSubscription }) {
         }, 1500);
     };
 
+    const handleStripePayment = async () => {
+        try {
+            setIsProcessing(true);
+            const token = session?.backendToken || localStorage.getItem('token');
+            const res = await fetch(`${API}/api/payment/stripe/create-checkout-session`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ planId: selectedPlan })
+            });
+
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+
+            const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+            await stripe.redirectToCheckout({ sessionId: data.id });
+        } catch (error) {
+            console.error("Stripe error:", error);
+            toast.error(error.message || "Failed to initiate Stripe payment.");
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
+    const handleRazorpayPayment = async () => {
+        try {
+            setIsProcessing(true);
+            const plan = plans.find(p => p.id === selectedPlan);
+            const amount = plan.price;
+
+            // 1. Create Order
+            const token = session?.backendToken || localStorage.getItem('token');
+            const res = await fetch(`${API}/api/payment/razorpay/order`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ planId: selectedPlan })
+            });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+            const order = data.data || data;
+
+            const options = {
+                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_your_razorpay_id',
+                amount: order.amount,
+                currency: order.currency,
+                name: "ResumeCraft",
+                description: `Upgrade to ${plan.name}`,
+                order_id: order.id,
+                handler: async function (response) {
+                    // 2. Verify Payment
+                    try {
+                        const token = session?.backendToken || localStorage.getItem('token');
+                        const verifyRes = await fetch(`${API}/api/payment/razorpay/verify`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({ ...response, planId: selectedPlan })
+                        });
+                        const verifyData = await verifyRes.json();
+                        if (verifyData.success) {
+                            toast.success("Payment successful! Your account has been upgraded.");
+                            window.location.reload();
+                        } else {
+                            toast.error(verifyData.error || "Payment verification failed.");
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error verifying payment.");
+                    }
+                },
+                prefill: {
+                    name: "User Name",
+                    email: "user@example.com",
+                },
+                theme: {
+                    color: "#4f46e5"
+                }
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+        } catch (error) {
+            console.error("Razorpay error:", error);
+            alert("Failed to initiate Razorpay payment.");
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
     const closePaymentModal = () => {
         setIsPaymentModalOpen(false);
         setPaymentMethod(null);
@@ -60,6 +202,10 @@ export default function Subscription({ currentSubscription }) {
 
     return (
         <section className="relative z-10 space-y-12 animate-in fade-in slide-in-from-top-4 duration-700">
+            <Script
+                id="razorpay-checkout-js"
+                src="https://checkout.razorpay.com/v1/checkout.js"
+            />
             <div className="text-center space-y-4">
                 <h2 className="text-4xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
                     Upgrade to Premium
@@ -107,15 +253,15 @@ export default function Subscription({ currentSubscription }) {
 
                         <button
                             onClick={() => setSelectedPlan(plan.id)}
-                            disabled={currentSubscription?.plan === plan.id && currentSubscription?.status === 'active'}
-                            className={`w-full py-4 rounded-2xl font-bold text-sm transition-all active:scale-95 ${currentSubscription?.plan === plan.id && currentSubscription?.status === 'active'
+                            disabled={subscription?.plan === plan.id && subscription?.status === 'active'}
+                            className={`w-full py-4 rounded-2xl font-bold text-sm transition-all active:scale-95 ${subscription?.plan === plan.id && subscription?.status === 'active'
                                 ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 cursor-default"
                                 : selectedPlan === plan.id
                                     ? "bg-indigo-600 text-white shadow-xl shadow-indigo-600/20"
                                     : "bg-white/5 text-slate-300 hover:bg-white/10"
                                 }`}
                         >
-                            {currentSubscription?.plan === plan.id && currentSubscription?.status === 'active' ? 'Active Plan' : `Select ${plan.name}`}
+                            {subscription?.plan === plan.id && subscription?.status === 'active' ? 'Active Plan' : `Select ${plan.name}`}
                         </button>
                     </div>
                 ))}

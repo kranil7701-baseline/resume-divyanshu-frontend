@@ -8,6 +8,18 @@ export default function GenerateResume({ data }) {
     const [pagePadding, setPagePadding] = useState(20); // in mm
     const [sectionSpacing, setSectionSpacing] = useState(24); // in px (margin top for sections)
 
+    // New customization options
+    const [h2Size, setH2Size] = useState(14);
+    const [h3Size, setH3Size] = useState(12);
+    const [h2Padding, setH2Padding] = useState(4);
+    const [h3Padding, setH3Padding] = useState(0);
+    const [h2Color, setH2Color] = useState('#000000');
+    const [h3Color, setH3Color] = useState('#000000');
+    const [pSize, setPSize] = useState(11);
+    const [pPadding, setPPadding] = useState(0);
+    const [pColor, setPColor] = useState('#000000');
+    const [isGenerating, setIsGenerating] = useState(false);
+
     const fonts = [
         { id: 'font-sans', label: 'Inter (Modern)', family: 'Inter, system-ui, sans-serif' },
         { id: 'font-serif', label: 'Georgia (Classic)', family: 'Georgia, serif' },
@@ -27,44 +39,86 @@ export default function GenerateResume({ data }) {
 
     const handleDownload = async () => {
         const element = document.getElementById('resume-pdf-target');
+        if (!element || isGenerating) return;
+
+        setIsGenerating(true);
+        const { toast } = await import('react-hot-toast');
+        const toastId = toast.loading("Preparing your resume PDF...");
+
         const opt = {
             margin: 0,
             filename: `Resume_${data.profile?.name || 'User'}.pdf`,
-            image: { type: 'jpeg', quality: 1.0 },
+            image: { type: 'jpeg', quality: 0.98 },
             html2canvas: {
-                scale: 4,
+                scale: 2,
                 useCORS: true,
                 letterRendering: true,
-                onclone: (clonedDoc) => {
-                    const elements = clonedDoc.getElementsByTagName('*');
-                    for (let i = 0; i < elements.length; i++) {
-                        const el = elements[i];
-                        const styles = window.getComputedStyle(el);
-
-                        // List of properties that might contain colors
-                        const props = ['color', 'backgroundColor', 'borderColor', 'borderTopColor', 'borderBottomColor', 'borderLeftColor', 'borderRightColor', 'fill', 'stroke'];
-
-                        props.forEach(prop => {
-                            const value = styles[prop];
-                            if (value && value.includes('oklch')) {
-                                // Simple replacement to prevent crash.
-                                // Since we are using mostly black/gray/blue, we can try to approximate or just force black/white
-                                // A better way would be to use a canvas to convert it, but that's complex here.
-                                // For now, let's just force a safe color to avoid the crash.
-                                if (prop === 'backgroundColor') el.style[prop] = '#ffffff';
-                                else if (styles.color && styles.color.includes('oklch')) el.style.color = '#000000';
-                                else el.style[prop] = '#000000';
-                            }
-                        });
-                    }
-                }
+                allowTaint: true,
+                logging: false,
+                backgroundColor: '#ffffff',
+                // Explicitly handle scroll to prevent white gap at top
+                scrollY: 0,
+                scrollX: 0,
+                windowWidth: 794, // Fixed width for A4 at 96DPI
+                // Ensure the full element is captured, not just the viewport
+                // This is usually handled by html2pdf.js when passing an element
             },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
-            pagebreak: { mode: ['avoid-all'] }
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            // Re-enable 'break-inside: avoid' for sections using a more reliable CSS approach.
+            // html2pdf.js's pagebreak.avoid option is designed for this.
+            pagebreak: { mode: ['css', 'legacy'], avoid: '.section-avoid-break' }
         };
 
-        const html2pdf = (await import('html2pdf.js')).default;
-        html2pdf().set(opt).from(element).save();
+        try {
+            // Reset scroll position temporarily or use the container directly
+            // The hidden container approach is good, but we must ensure it's at the top of the body
+            const html2pdf = (await import('html2pdf.js')).default;
+
+            // Use a chain of promises instead of mixing await/then to avoid R2/DOM sync issues
+            const worker = html2pdf().set(opt).from(element);
+
+            // Step 1: Trigger the local download
+            await worker.save();
+
+            // Step 2: Extract blob for cloud history
+            const pdfBlob = await worker.output('blob');
+
+            if (pdfBlob) {
+                const reader = new FileReader();
+                reader.readAsDataURL(pdfBlob);
+                reader.onloadend = async () => {
+                    try {
+                        const base64data = reader.result;
+                        const token = localStorage.getItem('token');
+                        const { API } = await import('../config');
+
+                        await fetch(`${API}/api/upload-resume`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                fileName: `Resume_${data.profile?.name || 'User'}.pdf`,
+                                pdfBase64: base64data,
+                                templateName: template
+                            })
+                        });
+                        toast.success("Saved to cloud history!", { id: toastId });
+                    } catch (e) {
+                        console.error("Cloud save error:", e);
+                        toast.error("Downloaded, but cloud sync failed.", { id: toastId });
+                    }
+                };
+            } else {
+                toast.success("Resume downloaded successfully!", { id: toastId });
+            }
+        } catch (error) {
+            console.error("PDF Generation Error:", error);
+            toast.error("PDF generation failed. Check console for details.", { id: toastId });
+        } finally {
+            setIsGenerating(false);
+        }
     };
 
     return (
@@ -83,10 +137,23 @@ export default function GenerateResume({ data }) {
                         {/* Download Button moved here for visibility */}
                         <button
                             onClick={handleDownload}
-                            className="w-full bg-white text-blue-900 hover:bg-blue-50 px-4 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all relative z-10 text-[11px]"
+                            disabled={isGenerating}
+                            className={`w-full py-4 rounded-xl flex items-center justify-center gap-3 font-bold transition-all shadow-lg shadow-indigo-500/25 ${isGenerating
+                                ? 'bg-slate-700 cursor-not-allowed text-slate-400'
+                                : 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                                }`}
                         >
-                            <Download size={14} />
-                            Download PDF
+                            {isGenerating ? (
+                                <>
+                                    <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                                    <span>Generating...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Download size={20} />
+                                    <span>Download PDF</span>
+                                </>
+                            )}
                         </button>
 
                         <div className="h-px bg-white/5 w-full" />
@@ -179,21 +246,169 @@ export default function GenerateResume({ data }) {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Heading Customization */}
+                        <div className="space-y-4 pt-2 border-t border-white/5">
+                            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Heading 2 (Sections)</label>
+                            <div className="bg-slate-800/20 p-4 rounded-2xl border border-white/5 space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[10px] text-slate-400 font-bold">FONT SIZE</span>
+                                    <input
+                                        type="number" value={h2Size}
+                                        onChange={(e) => setH2Size(parseInt(e.target.value))}
+                                        className="w-16 bg-slate-700 text-white text-xs px-2 py-1 rounded"
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[10px] text-slate-400 font-bold">PADDING</span>
+                                    <input
+                                        type="number" value={h2Padding}
+                                        onChange={(e) => setH2Padding(parseInt(e.target.value))}
+                                        className="w-16 bg-slate-700 text-white text-xs px-2 py-1 rounded"
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[10px] text-slate-400 font-bold">COLOR</span>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => setH2Color(color)}
+                                            className="text-[9px] text-indigo-400 hover:text-indigo-300 font-bold uppercase"
+                                        >
+                                            Reset
+                                        </button>
+                                        <input
+                                            type="color" value={h2Color}
+                                            onChange={(e) => setH2Color(e.target.value)}
+                                            className="w-8 h-8 rounded cursor-pointer border-none bg-transparent"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 pt-2 border-t border-white/5">
+                            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Heading 3 (Items)</label>
+                            <div className="bg-slate-800/20 p-4 rounded-2xl border border-white/5 space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[10px] text-slate-400 font-bold">FONT SIZE</span>
+                                    <input
+                                        type="number" value={h3Size}
+                                        onChange={(e) => setH3Size(parseInt(e.target.value))}
+                                        className="w-16 bg-slate-700 text-white text-xs px-2 py-1 rounded"
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[10px] text-slate-400 font-bold">PADDING</span>
+                                    <input
+                                        type="number" value={h3Padding}
+                                        onChange={(e) => setH3Padding(parseInt(e.target.value))}
+                                        className="w-16 bg-slate-700 text-white text-xs px-2 py-1 rounded"
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[10px] text-slate-400 font-bold">COLOR</span>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => setH3Color(color)}
+                                            className="text-[9px] text-indigo-400 hover:text-indigo-300 font-bold uppercase"
+                                        >
+                                            Reset
+                                        </button>
+                                        <input
+                                            type="color" value={h3Color}
+                                            onChange={(e) => setH3Color(e.target.value)}
+                                            className="w-8 h-8 rounded cursor-pointer border-none bg-transparent"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 pt-2 border-t border-white/5">
+                            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Body Text (Paragraphs)</label>
+                            <div className="bg-slate-800/20 p-4 rounded-2xl border border-white/5 space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[10px] text-slate-400 font-bold">FONT SIZE</span>
+                                    <input
+                                        type="number" value={pSize}
+                                        onChange={(e) => setPSize(parseInt(e.target.value))}
+                                        className="w-16 bg-slate-700 text-white text-xs px-2 py-1 rounded"
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[10px] text-slate-400 font-bold">PADDING</span>
+                                    <input
+                                        type="number" value={pPadding}
+                                        onChange={(e) => setPPadding(parseInt(e.target.value))}
+                                        className="w-16 bg-slate-700 text-white text-xs px-2 py-1 rounded"
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[10px] text-slate-400 font-bold">COLOR</span>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => setPColor('#000000')}
+                                            className="text-[9px] text-indigo-400 hover:text-indigo-300 font-bold uppercase"
+                                        >
+                                            Black
+                                        </button>
+                                        <input
+                                            type="color" value={pColor}
+                                            onChange={(e) => setPColor(e.target.value)}
+                                            className="w-8 h-8 rounded cursor-pointer border-none bg-transparent"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Preview Area */}
             <div className="flex-1 bg-slate-900/30 border border-white/5 rounded-[32px] p-6 lg:p-8 overflow-y-auto flex justify-center print:hidden relative custom-scrollbar shadow-inner">
-                <div className="scale-[0.4] sm:scale-[0.55] md:scale-[0.65] lg:scale-[0.7] xl:scale-[0.85] origin-top transition-all duration-500 shadow-2xl shadow-black/50">
-                    <ResumePreview data={data} template={template} font={font} color={color} pagePadding={pagePadding} sectionSpacing={sectionSpacing} />
+                <div className="w-[210mm] scale-[0.4] sm:scale-[0.55] md:scale-[0.65] lg:scale-[0.7] xl:scale-[0.85] origin-top transition-all duration-500 shadow-2xl shadow-black/50">
+                    <ResumePreview
+                        data={data}
+                        template={template}
+                        font={font}
+                        color={color}
+                        pagePadding={pagePadding}
+                        sectionSpacing={sectionSpacing}
+                        h2Size={h2Size}
+                        h3Size={h3Size}
+                        h2Padding={h2Padding}
+                        h3Padding={h3Padding}
+                        h2Color={h2Color}
+                        h3Color={h3Color}
+                        pSize={pSize}
+                        pPadding={pPadding}
+                        pColor={pColor}
+                    />
                 </div>
             </div>
 
             {/* Hidden Container for PDF Generation */}
             <div className="fixed left-[-9999px] top-0 overflow-hidden">
                 <div id="pdf-wrapper" className="w-[210mm]">
-                    <ResumePreview data={data} template={template} font={font} color={color} pagePadding={pagePadding} sectionSpacing={sectionSpacing} id="resume-pdf-target" />
+                    <ResumePreview
+                        data={data}
+                        template={template}
+                        font={font}
+                        color={color}
+                        pagePadding={pagePadding}
+                        sectionSpacing={sectionSpacing}
+                        id="resume-pdf-target"
+                        h2Size={h2Size}
+                        h3Size={h3Size}
+                        h2Padding={h2Padding}
+                        h3Padding={h3Padding}
+                        h2Color={h2Color}
+                        h3Color={h3Color}
+                        pSize={pSize}
+                        pPadding={pPadding}
+                        pColor={pColor}
+                    />
                 </div>
             </div>
         </div>

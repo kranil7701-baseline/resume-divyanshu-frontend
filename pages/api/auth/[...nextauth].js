@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { API } from "../../../config";
 
-console.log("NextAuth API URL:", API);
+
 
 export default NextAuth({
     providers: [

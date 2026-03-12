@@ -1,7 +1,7 @@
 import React from "react";
 import { Mail, Phone, MapPin, Link as LinkIcon, Github, Linkedin, Youtube, Twitter } from "lucide-react";
 
-export default function Template4({ data, id, font = 'font-sans', color = '#000000', pagePadding = 20, sectionSpacing = 24 }) {
+export default function Template4({ data, id, font = 'font-sans', color = '#000000', pagePadding = 20, sectionSpacing = 24, h2Size, h3Size, h2Padding, h3Padding, h2Color, h3Color, pSize, pPadding, pColor }) {
     const { profile, experience, education, skills, projects, projectExperience, certifications, social } = data;
 
     const fontStyles = {
@@ -23,10 +23,39 @@ export default function Template4({ data, id, font = 'font-sans', color = '#0000
         return <LinkIcon size={12} />;
     };
 
+
+    const h2Style1 = {
+        fontSize: h2Size ? `${h2Size}px` : '14px',
+        backgroundColor: h2Color || color,
+        padding: `${h2Padding || 4}px 12px`,
+        marginBottom: '12px',
+        color: 'white'
+    };
+
+    const h2Style2 = {
+        fontSize: h2Size ? `${h2Size}px` : '14px',
+        color: h2Color || color,
+        borderBottom: `2px solid ${h2Color || color}`,
+        paddingBottom: `${h2Padding || 4}px`,
+        marginBottom: '16px'
+    };
+
+    const h3Style = {
+        fontSize: h3Size ? `${h3Size}px` : '13px',
+        color: h3Color || '#000000',
+        paddingBottom: h3Padding ? `${h3Padding}px` : '0px'
+    };
+
+    const pStyle = {
+        fontSize: pSize ? `${pSize}px` : '11px',
+        color: pColor || '#000000',
+        paddingBottom: pPadding ? `${pPadding}px` : '0px'
+    };
+
     return (
         <div
             id={id || "resume-preview"}
-            className="w-[210mm] min-h-[297mm] mx-auto bg-white text-black leading-tight overflow-hidden"
+            className="w-full bg-white text-black leading-tight"
             style={{ fontFamily: activeFontFamily, padding: `${pagePadding}mm` }}
         >
             {/* Header */}
@@ -47,12 +76,12 @@ export default function Template4({ data, id, font = 'font-sans', color = '#0000
                 </div>
             </header>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: `${sectionSpacing}px` }}>
+            <div className="resume-content">
                 {/* Summary */}
                 {(profile?.summary || profile?.about) && (
-                    <section>
-                        <h2 className="text-[14px] font-black uppercase tracking-widest px-3 py-1 mb-3 text-white" style={{ backgroundColor: color }}>PROFESSIONAL SUMMARY</h2>
-                        <p className="text-[11px] leading-relaxed text-black text-justify px-1">
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                        <h2 className="font-black uppercase tracking-widest" style={h2Style1}>PROFESSIONAL SUMMARY</h2>
+                        <p className="leading-relaxed text-justify px-1" style={pStyle}>
                             {profile.summary || profile.about}
                         </p>
                     </section>
@@ -60,22 +89,22 @@ export default function Template4({ data, id, font = 'font-sans', color = '#0000
 
                 {/* Experience */}
                 {experience?.length > 0 && (
-                    <section>
-                        <h2 className="text-[14px] font-black uppercase tracking-widest pb-1 mb-4" style={{ borderBottom: `2px solid ${color}` }}>EXPERIENCE</h2>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                        <h2 className="font-black uppercase tracking-widest pb-1 mb-4" style={h2Style2}>EXPERIENCE</h2>
                         <div className="space-y-6">
                             {experience.map((exp) => (
                                 <div key={exp.id || Math.random()}>
                                     <div className="flex justify-between items-baseline mb-1">
-                                        <h3 className="font-bold text-black text-[13px] uppercase">{exp.role}</h3>
-                                        <span className="text-[11px] font-bold text-black">
+                                        <h3 className="font-bold uppercase" style={h3Style}>{exp.role}</h3>
+                                        <span style={pStyle} className="font-bold">
                                             {exp.start ? new Date(exp.start).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ''} —
                                             {exp.end ? new Date(exp.end).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ' Present'}
                                         </span>
                                     </div>
-                                    <div className="text-[11px] font-bold text-gray-600 mb-2 uppercase italic">{exp.company}</div>
-                                    <ul className="text-black text-[11px] leading-relaxed space-y-1 ml-4 list-disc">
+                                    <p className="font-bold text-gray-600 mb-2 uppercase italic" style={pStyle}>{exp.company}</p>
+                                    <ul className="leading-relaxed space-y-1 ml-4 list-disc">
                                         {exp.details?.split('\n').map((line, i) => (
-                                            <li key={i}>{line.replace(/^[•*-]\s*/, '')}</li>
+                                            <li key={i} style={pStyle}>{line.replace(/^[•*-]\s*/, '')}</li>
                                         ))}
                                     </ul>
                                 </div>
@@ -86,19 +115,19 @@ export default function Template4({ data, id, font = 'font-sans', color = '#0000
 
                 {/* Projects Section */}
                 {((projects && projects.length > 0) || (projectExperience && projectExperience.length > 0)) && (
-                    <section>
-                        <h2 className="text-[14px] font-black uppercase tracking-widest pb-1 mb-4" style={{ borderBottom: `2px solid ${color}` }}>KEY PROJECTS</h2>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                        <h2 className="font-black uppercase tracking-widest pb-1 mb-4" style={h2Style2}>KEY PROJECTS</h2>
                         <div className="grid grid-cols-2 gap-6">
                             {projectExperience?.map((proj) => (
                                 <div key={proj.id || Math.random()} className="pl-3 py-1" style={{ borderLeft: `2px solid ${color}` }}>
-                                    <h3 className="font-bold text-black text-[12px] uppercase mb-1">{proj.title}</h3>
-                                    <p className="text-[11px] text-black leading-relaxed italic">{proj.details || proj.description}</p>
+                                    <h3 className="font-bold uppercase mb-1" style={h3Style}>{proj.title}</h3>
+                                    <p className="leading-relaxed italic" style={pStyle}>{proj.details || proj.description}</p>
                                 </div>
                             ))}
                             {projects?.filter(p => !projectExperience?.some(pe => pe.title === p.title)).map((proj) => (
                                 <div key={proj.id || Math.random()} className="pl-3 py-1" style={{ borderLeft: `2px solid ${color}` }}>
-                                    <h3 className="font-bold text-black text-[12px] uppercase mb-1">{proj.title}</h3>
-                                    <p className="text-[11px] text-black leading-relaxed italic">{proj.description || proj.desc}</p>
+                                    <h3 className="font-bold uppercase mb-1" style={h3Style}>{proj.title}</h3>
+                                    <p className="leading-relaxed italic" style={pStyle}>{proj.description || proj.desc}</p>
                                     {proj.link && <a href={proj.link} className="text-[10px] text-gray-500 hover:underline mt-1 block font-mono">Project Link</a>}
                                 </div>
                             ))}
@@ -111,13 +140,16 @@ export default function Template4({ data, id, font = 'font-sans', color = '#0000
                     {/* Education */}
                     {education?.length > 0 && (
                         <section>
-                            <h2 className="text-[14px] font-black uppercase tracking-widest pb-1 mb-4" style={{ borderBottom: `2px solid ${color}` }}>EDUCATION</h2>
+                            <h2 className="font-black uppercase tracking-widest pb-1 mb-4" style={h2Style2}>EDUCATION</h2>
                             <div className="space-y-4">
                                 {education.map((edu) => (
                                     <div key={edu.id || Math.random()}>
-                                        <h3 className="font-bold text-black text-[12px] uppercase">{edu.degree}</h3>
-                                        <div className="text-[11px] text-black font-medium">{edu.school}</div>
-                                        <div className="text-[10px] text-gray-500 font-bold italic">
+                                        <h3 className="font-bold uppercase" style={h3Style}>{edu.degree}</h3>
+                                        <div className="flex justify-between items-baseline" style={pStyle}>
+                                            <div className="font-medium">{edu.school}</div>
+                                            {edu.grade && <div className="font-bold">Grade: {edu.grade}</div>}
+                                        </div>
+                                        <div style={pStyle} className="font-bold italic">
                                             Graduated: {edu.end ? new Date(edu.end).getFullYear() : 'Present'}
                                         </div>
                                     </div>
@@ -129,10 +161,10 @@ export default function Template4({ data, id, font = 'font-sans', color = '#0000
                     {/* Skills */}
                     {skills?.length > 0 && (
                         <section>
-                            <h2 className="text-[14px] font-black uppercase tracking-widest pb-1 mb-4" style={{ borderBottom: `2px solid ${color}` }}>CORE SKILLS</h2>
+                            <h2 className="font-black uppercase tracking-widest pb-1 mb-4" style={h2Style2}>CORE SKILLS</h2>
                             <div className="grid grid-cols-2 gap-y-2 text-[11px] text-black font-bold italic">
                                 {skills.map((skill, index) => (
-                                    <div key={index} className="flex items-center gap-2">
+                                    <div key={index} className="flex items-center gap-2" style={pStyle}>
                                         <span className="w-1.5 h-1.5 shrink-0" style={{ backgroundColor: color }}></span>
                                         <span>{typeof skill === 'string' ? skill : skill.name}</span>
                                     </div>
@@ -144,13 +176,13 @@ export default function Template4({ data, id, font = 'font-sans', color = '#0000
 
                 {/* Certifications & Social */}
                 {(certifications?.length > 0 || social?.length > 0) && (
-                    <section className="pt-4" style={{ borderTop: `2px solid ${color}` }}>
+                    <section className="pt-4 section-avoid-break" style={{ borderTop: `2px solid ${color}` }}>
                         {certifications?.length > 0 && (
                             <div className="mb-4">
                                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-2">CERTIFICATIONS</h3>
                                 <div className="flex flex-wrap gap-x-6 gap-y-1">
                                     {certifications.map((cert, i) => (
-                                        <div key={i} className="text-[11px] font-bold text-black uppercase">{cert.name}</div>
+                                        <div key={i} className="font-bold uppercase" style={pStyle}>{cert.name}</div>
                                     ))}
                                 </div>
                             </div>

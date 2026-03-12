@@ -1,7 +1,7 @@
 import React from "react";
 import { Mail, Phone, MapPin, Link as LinkIcon, Github, Linkedin, Youtube, Twitter } from "lucide-react";
 
-export default function Template3({ data, id, font = 'font-sans', color = '#000000', pagePadding = 20, sectionSpacing = 24 }) {
+export default function Template3({ data, id, font = 'font-sans', color = '#000000', pagePadding = 20, sectionSpacing = 24, h2Size, h3Size, h2Padding, h3Padding, h2Color, h3Color, pSize, pPadding, pColor }) {
     const { profile, experience, education, skills, projects, projectExperience, certifications, social } = data;
 
     const fontStyles = {
@@ -24,10 +24,31 @@ export default function Template3({ data, id, font = 'font-sans', color = '#0000
     };
 
 
+
+    const h2Style = {
+        fontSize: h2Size ? `${h2Size}px` : '14px',
+        color: h2Color || color,
+        borderBottom: `1px solid ${h2Color || color}`,
+        paddingBottom: `${h2Padding || 4}px`,
+        marginBottom: '12px'
+    };
+
+    const h3Style = {
+        fontSize: h3Size ? `${h3Size}px` : '12px',
+        color: h3Color || '#000000',
+        paddingBottom: h3Padding ? `${h3Padding}px` : '0px'
+    };
+
+    const pStyle = {
+        fontSize: pSize ? `${pSize}px` : '11px',
+        color: pColor || '#000000',
+        paddingBottom: pPadding ? `${pPadding}px` : '0px'
+    };
+
     return (
         <div
             id={id || "resume-preview"}
-            className="w-[210mm] min-h-[297mm] mx-auto bg-white text-black leading-snug overflow-hidden"
+            className="w-full bg-white text-black leading-snug"
             style={{ fontFamily: activeFontFamily, padding: `${pagePadding}mm` }}
         >
             {/* Centered Header */}
@@ -55,12 +76,12 @@ export default function Template3({ data, id, font = 'font-sans', color = '#0000
                 <div className="mt-2 mb-4 w-full" style={{ borderBottom: `6px solid ${color}` }}></div>
             </header>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: `${sectionSpacing}px` }}>
+            <div className="resume-content">
                 {/* Profile Summary */}
                 {(profile?.summary || profile?.about) && (
-                    <section>
-                        <h2 className="text-[14px] font-bold uppercase tracking-widest border-b border-gray-300 pb-1 mb-3" style={{ color, borderColor: color }}>PROFILE SUMMARY</h2>
-                        <p className="text-[11px] leading-relaxed text-black text-justify">
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                        <h2 className="font-bold uppercase tracking-widest border-b" style={h2Style}>PROFILE SUMMARY</h2>
+                        <p className="leading-relaxed text-justify" style={pStyle}>
                             {profile.summary || profile.about}
                         </p>
                     </section>
@@ -68,20 +89,20 @@ export default function Template3({ data, id, font = 'font-sans', color = '#0000
 
                 {/* Experience */}
                 {experience?.length > 0 && (
-                    <section>
-                        <h2 className="text-[14px] font-bold uppercase tracking-widest border-b border-gray-300 pb-1 mb-4" style={{ color, borderColor: color }}>EXPERIENCE</h2>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                        <h2 className="font-bold uppercase tracking-widest border-b" style={h2Style}>EXPERIENCE</h2>
                         <div className="space-y-6">
                             {experience.map((exp) => (
                                 <div key={exp.id || Math.random()}>
                                     <div className="flex justify-between items-baseline mb-1">
-                                        <h3 className="font-bold text-black text-[12px]">{exp.role}</h3>
-                                        <div className="text-[11px] font-bold text-black">
+                                        <h3 className="font-bold" style={h3Style}>{exp.role}</h3>
+                                        <div style={pStyle} className="font-bold">
                                             {exp.company} <span className="font-medium">| {exp.start ? new Date(exp.start).getFullYear() : ''} — {exp.end ? new Date(exp.end).getFullYear() : 'Present'}</span>
                                         </div>
                                     </div>
-                                    <div className="text-black text-[11px] leading-relaxed ml-4">
+                                    <div className="leading-relaxed ml-4">
                                         {exp.details?.split('\n').map((line, i) => (
-                                            <div key={i} className="flex gap-2 mb-1">
+                                            <div key={i} className="flex gap-2 mb-1" style={pStyle}>
                                                 <span className="shrink-0">•</span>
                                                 <span>{line.replace(/^[•*-]\s*/, '')}</span>
                                             </div>
@@ -95,31 +116,31 @@ export default function Template3({ data, id, font = 'font-sans', color = '#0000
 
                 {/* Projects Section */}
                 {((projects && projects.length > 0) || (projectExperience && projectExperience.length > 0)) && (
-                    <section>
-                        <h2 className="text-[14px] font-bold uppercase tracking-widest border-b border-gray-300 pb-1 mb-4" style={{ color, borderColor: color }}>PROJECTS</h2>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                        <h2 className="font-bold uppercase tracking-widest border-b" style={h2Style}>PROJECTS</h2>
                         <div className="space-y-6">
                             {projectExperience?.map((proj) => (
                                 <div key={proj.id || Math.random()}>
                                     <div className="flex justify-between items-baseline mb-1">
-                                        <h3 className="font-bold text-black text-[12px]">{proj.title}</h3>
-                                        <div className="text-[11px] font-bold text-black">
+                                        <h3 className="font-bold" style={h3Style}>{proj.title}</h3>
+                                        <div style={pStyle} className="font-bold">
                                             {proj.client} <span className="font-medium">| {proj.start ? new Date(proj.start).getFullYear() : ''} — {proj.end ? new Date(proj.end).getFullYear() : 'Present'}</span>
                                         </div>
                                     </div>
-                                    <div className="text-black text-[11px] leading-relaxed ml-4">
+                                    <p className="leading-relaxed ml-4" style={pStyle}>
                                         {proj.details || proj.description}
-                                    </div>
+                                    </p>
                                 </div>
                             ))}
                             {projects?.filter(p => !projectExperience?.some(pe => pe.title === p.title)).map((proj) => (
                                 <div key={proj.id || Math.random()}>
                                     <div className="flex justify-between items-baseline mb-1">
-                                        <h3 className="font-bold text-black text-[12px]">{proj.title}</h3>
+                                        <h3 className="font-bold" style={h3Style}>{proj.title}</h3>
                                         <span className="text-[11px] font-bold text-black uppercase">Project</span>
                                     </div>
-                                    <div className="text-black text-[11px] leading-relaxed ml-4">
+                                    <p className="leading-relaxed ml-4" style={pStyle}>
                                         {proj.description || proj.desc}
-                                    </div>
+                                    </p>
                                     {proj.link && <p className="text-[10px] text-gray-500 mt-1 ml-4">{proj.link}</p>}
                                 </div>
                             ))}
@@ -129,14 +150,15 @@ export default function Template3({ data, id, font = 'font-sans', color = '#0000
 
                 {/* Education */}
                 {education?.length > 0 && (
-                    <section>
-                        <h2 className="text-[14px] font-bold uppercase tracking-widest border-b border-gray-300 pb-1 mb-3" style={{ color, borderColor: color }}>EDUCATION</h2>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                        <h2 className="font-bold uppercase tracking-widest border-b" style={h2Style}>EDUCATION</h2>
                         <div className="space-y-4">
                             {education.map((edu) => (
                                 <div key={edu.id || Math.random()}>
-                                    <h3 className="font-bold text-black text-[12px]">{edu.degree}</h3>
-                                    <div className="text-[11px] text-black">
-                                        {edu.school}, {edu.end ? new Date(edu.end).getFullYear() : 'Present'}
+                                    <h3 className="font-bold" style={h3Style}>{edu.degree}</h3>
+                                    <div className="flex justify-between items-baseline" style={pStyle}>
+                                        <div>{edu.school}, {edu.end ? new Date(edu.end).getFullYear() : 'Present'}</div>
+                                        {edu.grade && <div className="font-bold">GPA: {edu.grade}</div>}
                                     </div>
                                 </div>
                             ))}
@@ -146,12 +168,12 @@ export default function Template3({ data, id, font = 'font-sans', color = '#0000
 
                 {/* Skills */}
                 {skills?.length > 0 && (
-                    <section>
-                        <h2 className="text-[14px] font-bold uppercase tracking-widest border-b border-gray-300 pb-1 mb-3" style={{ color, borderColor: color }}>SKILLS</h2>
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                        <h2 className="font-bold uppercase tracking-widest border-b" style={h2Style}>SKILLS</h2>
                         <div className="space-y-3">
-                            <div className="px-1 text-[11px] text-black italic">
+                            <div className="px-1 italic">
                                 {skills.map((skill, index) => (
-                                    <span key={index}>
+                                    <span key={index} style={pStyle}>
                                         {typeof skill === 'string' ? skill : skill.name}
                                         {index < skills.length - 1 ? ', ' : ''}
                                     </span>
@@ -163,17 +185,17 @@ export default function Template3({ data, id, font = 'font-sans', color = '#0000
 
                 {/* Achievements / Certifications */}
                 {(certifications?.length > 0 || social?.length > 0) && (
-                    <section>
-                        <h2 className="text-[14px] font-bold uppercase tracking-widest border-b border-gray-300 pb-1 mb-3" style={{ color, borderColor: color }}>ACHIEVEMENTS / LINKS</h2>
-                        <div className="space-y-2 text-[11px] text-black px-1">
+                    <section className="section-avoid-break" style={{ marginBottom: `${sectionSpacing}px` }}>
+                        <h2 className="font-bold uppercase tracking-widest border-b" style={h2Style}>ACHIEVEMENTS / LINKS</h2>
+                        <div className="space-y-2 px-1">
                             {certifications?.map((cert, i) => (
-                                <div key={i} className="flex gap-2">
+                                <div key={i} className="flex gap-2" style={pStyle}>
                                     <span className="shrink-0">•</span>
                                     <span>{cert.name} {cert.issuer ? `- ${cert.issuer}` : ''} {cert.year ? `(${cert.year})` : ''}</span>
                                 </div>
                             ))}
                             {social?.map((s, i) => (
-                                <div key={i} className="flex gap-2 items-center">
+                                <div key={i} className="flex gap-2 items-center" style={pStyle}>
                                     <span className="shrink-0">•</span>
                                     <span className="font-bold">{s.network}:</span>
                                     <a href={s.url} target="_blank" rel="noreferrer" className="hover:underline">{s.url.replace(/^https?:\/\//, '')}</a>

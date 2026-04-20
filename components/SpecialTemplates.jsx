@@ -6,8 +6,8 @@ import {
   Type, Palette, Sliders, Layers,
   GripVertical, ChevronUp, ChevronDown,
   Download, RotateCcw, LayoutTemplate,
-  Linkedin, Code2, Mail, Phone, Globe, MapPin, Github, Twitter, Youtube,
-  Plus, Trash2, Eye, EyeOff, Save, Check, Edit3, ClipboardList, UserCircle
+  Linkedin, Mail, Phone, Globe, MapPin, Github, Twitter, Youtube,
+  Plus, Trash2, Eye, EyeOff, Save, Check, Edit3, ClipboardList, BookOpen, ExternalLink, UserCircle
 } from 'lucide-react';
 
 // ─── FONT OPTIONS ─────────────────────────────────────────────────────────────
@@ -39,19 +39,13 @@ const normalizeSectionOrder = (order = [], visibleSections = {}) => {
   const defaultOrder = ['summary', 'experience', 'skills', 'projects', 'education'];
   const uniqueOrder = Array.from(new Set([...(order.length ? order : defaultOrder)]));
 
-  if (visibleSections.projects && !uniqueOrder.includes('projects')) {
-    const insertIndex = uniqueOrder.indexOf('education');
-    if (insertIndex >= 0) {
-      uniqueOrder.splice(insertIndex, 0, 'projects');
-    } else {
-      uniqueOrder.push('projects');
+  defaultOrder.forEach(section => {
+    if (visibleSections[section] && !uniqueOrder.includes(section)) {
+      uniqueOrder.push(section);
     }
-  }
-
-  return uniqueOrder.filter(section => {
-    if (section === 'projects' && !visibleSections.projects) return false;
-    return true;
   });
+
+  return uniqueOrder.filter(section => visibleSections[section]);
 };
 
 // ─── SAMPLE DATA ──────────────────────────────────────────────────────────────
@@ -62,8 +56,8 @@ const SAMPLE_DATA = {
     email: 'myemail@gmail.com',
     phone: '+919090909090',
     location: 'Bengaluru',
-    linkedin: 'Rohit Doshi',
-    leetcode: 'LeetCode Profile',
+    linkedin: 'https://www.linkedin.com/in/rohit-doshi',
+    github: 'https://github.com/example',
     summary: 'Results-driven back-end engineer with 6 years of hands-on experience designing and scaling cloud native microservices in Java. Proven track record in leading firms now aiming for a role at a top-tier product company. Expert in distributed systems, AWS-based deployments, Kubernetes orchestration, and real-time data pipelines. Adaptive to driving end-to-end delivery, mentoring teams, and optimizing performance under high SLAs.',
   },
   experience: [
@@ -96,7 +90,10 @@ const SAMPLE_DATA = {
     }
   ],
   education: [
-    { id: 1, degree: 'B.E. Computer Engineering', school: 'PICT, Pune', start: '2014', end: '2018', grade: '8.5 CGPA' }
+    { id: 1, degree: '10th Grade', school: 'ABC High School', start: '2010', end: '2011', grade: '95%' },
+    { id: 2, degree: '11th Grade', school: 'ABC Junior College', start: '2012', end: '2013', grade: '92%' },
+    { id: 3, degree: 'B.E. Computer Engineering', school: 'PICT, Pune', start: '2014', end: '2018', grade: '8.5 CGPA' },
+    { id: 4, degree: 'M.Tech Computer Science', school: 'IIT Bombay', start: '2019', end: '2021', grade: '9.1 CGPA' }
   ],
   skills: [
     { id: 1, category: 'Programming Languages', items: 'Java(Proficient), C++(Beginner), Python(Beginner)' },
@@ -111,7 +108,7 @@ const SAMPLE_DATA = {
   ],
   customSections: [],
   visibleSections: {
-    summary: true, experience: true, skills: true, education: false, projects: false
+    summary: true, experience: true, skills: true, education: true, projects: false
   }
 };
 
@@ -157,7 +154,7 @@ function ResumePreview({ data, setData, style: s, sectionOrder, setSectionOrder,
     }
     switch (id) {
       case 'summary':
-        return <div style={{ ...pStyle, textAlign: 'justify' }}><EditablePreviewText value={profile.summary} onChange={v => upProf('summary', v)} multiline /></div>;
+        return <div style={{ ...pStyle, textAlign: 'justify' }}>{profile.summary}</div>;
       case 'experience':
         return <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {experience.map((exp, i) => (
@@ -194,13 +191,11 @@ function ResumePreview({ data, setData, style: s, sectionOrder, setSectionOrder,
         return <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
           {education.map((edu, i) => (
             <div key={edu.id}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}>
-                <span>{edu.degree}</span>
-                <span style={{ fontSize: `${s.bodyFontSize}px` }}>{edu.start} – {edu.end}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+                <span style={{ fontWeight: 600, fontSize: `${Math.max(s.bodyFontSize - 0.5, 9)}px` }}>{edu.degree}{edu.school ? `, ${edu.school}` : ''}</span>
+                <span style={{ fontSize: `${Math.max(s.bodyFontSize - 1, 9)}px`, fontWeight: 500 }}>{edu.start && edu.end ? `${edu.start} – ${edu.end}` : edu.start || edu.end}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', ...pStyle, fontStyle: 'italic' }}>
-                <span>{edu.school}</span><span>{edu.grade}</span>
-              </div>
+              {edu.grade && <div style={{ ...pStyle, marginTop: '2px', fontStyle: 'italic' }}>{edu.grade}</div>}
             </div>
           ))}
         </div>;
@@ -212,8 +207,12 @@ function ResumePreview({ data, setData, style: s, sectionOrder, setSectionOrder,
             const description = project.description || project.desc;
             return (
               <div key={project.id} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <div style={{ fontWeight: 700, fontSize: `${s.bodyFontSize + 0.5}px` }}>{name}</div>
-                {link && <a href={link} target="_blank" rel="noreferrer" style={{ color: s.headingColor, fontSize: `${s.bodyFontSize}px`, textDecoration: 'underline' }}>{link}</a>}
+                <div style={{ fontWeight: 700, fontSize: `${s.bodyFontSize + 0.5}px`, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  {name}
+                  {link && <a href={link} target="_blank" rel="noreferrer" style={{ color: s.headingColor, textDecoration: 'none' }}>
+                    <ExternalLink size={14} />
+                  </a>}
+                </div>
                 <div style={{ ...pStyle, whiteSpace: 'pre-wrap' }}>{description}</div>
               </div>
             );
@@ -224,12 +223,12 @@ function ResumePreview({ data, setData, style: s, sectionOrder, setSectionOrder,
   };
 
   const contactRow = [
-    { icon: <Mail size={11} />, val: profile.email },
-    { icon: <Phone size={11} />, val: profile.phone },
-    { icon: <Linkedin size={11} />, val: profile.linkedin },
-    { icon: <Code2 size={11} />, val: profile.leetcode },
-    { icon: <MapPin size={11} />, val: profile.location },
-  ].filter(x => x.val);
+    { icon: <Mail size={11} />, text: profile.email },
+    { icon: <Phone size={11} />, text: profile.phone },
+    { icon: <Linkedin size={11} />, text: 'LinkedIn', href: profile.linkedin },
+    { icon: <Github size={11} />, text: 'GitHub', href: profile.github },
+    { icon: <MapPin size={11} />, text: profile.location },
+  ].filter(x => x.text || x.href);
 
   return (
     <div id="special-resume-preview" style={{ width: '210mm', minHeight: '297mm', background: '#fff', color: s.textColor, fontFamily: s.font, padding: `${s.pagePadding}mm`, boxSizing: 'border-box' }}>
@@ -238,10 +237,17 @@ function ResumePreview({ data, setData, style: s, sectionOrder, setSectionOrder,
         <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', fontSize: `${s.bodyFontSize}px`, fontWeight: 400, flexWrap: 'wrap', alignItems: 'center' }}>
           {contactRow.map((item, i) => (
             <React.Fragment key={i}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <span style={{ color: s.headingColor, display: 'flex', alignItems: 'center' }}>{item.icon}</span>
-                <span>{item.val}</span>
-              </span>
+              {item.href ? (
+                <a href={item.href} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'inherit', textDecoration: 'none' }}>
+                  <span style={{ color: s.headingColor, display: 'flex', alignItems: 'center' }}>{item.icon}</span>
+                  <span>{item.text}</span>
+                </a>
+              ) : (
+                <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <span style={{ color: s.headingColor, display: 'flex', alignItems: 'center' }}>{item.icon}</span>
+                  <span>{item.text}</span>
+                </span>
+              )}
               {i < contactRow.length - 1 && <span style={{ opacity: 0.5, fontWeight: 300 }}>|</span>}
             </React.Fragment>
           ))}
@@ -319,8 +325,8 @@ function ControlPanel({ data, setData, style, setStyle, isDragMode, setIsDragMod
               <Input label="Email" value={data.profile.email} onChange={v => upProf('email', v)} />
               <Input label="Phone" value={data.profile.phone} onChange={v => upProf('phone', v)} />
               <Input label="Location" value={data.profile.location} onChange={v => upProf('location', v)} />
-              <Input label="LinkedIn" value={data.profile.linkedin} onChange={v => upProf('linkedin', v)} />
-              <Input label="LeetCode/GitHub" value={data.profile.leetcode} onChange={v => upProf('leetcode', v)} />
+              <Input label="LinkedIn URL" value={data.profile.linkedin || ''} onChange={v => upProf('linkedin', v)} />
+              <Input label="GitHub URL" value={data.profile.github || ''} onChange={v => upProf('github', v)} />
               <Input label="Summary" value={data.profile.summary} onChange={v => upProf('summary', v)} multi />
             </div>
 
@@ -352,6 +358,23 @@ function ControlPanel({ data, setData, style, setStyle, isDragMode, setIsDragMod
                 </div>
               ))}
               <button onClick={() => add('skills', { category: 'Tools', items: '' })} style={{ width: '100%', border: '1px dashed #ffffff20', color: '#64748b', padding: '6px', cursor: 'pointer', borderRadius: '6px' }}>+ Add Skill Cat</button>
+            </div>
+
+            <div>
+              <p style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#818cf8', fontWeight: 800, fontSize: '12px', mb: '10px' }}><BookOpen size={14} /> Education</p>
+              {data.education.map((edu, i) => (
+                <div key={edu.id} style={{ padding: '10px', background: '#ffffff03', borderRadius: '8px', marginBottom: '10px', border: '1px solid #ffffff08' }}>
+                  <Input label="Qualification" value={edu.degree} onChange={v => upList('education', i, 'degree', v)} />
+                  <Input label="School / University" value={edu.school} onChange={v => upList('education', i, 'school', v)} />
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <div style={{ flex: 1 }}><Input label="Start Year" value={edu.start} onChange={v => upList('education', i, 'start', v)} /></div>
+                    <div style={{ flex: 1 }}><Input label="End Year" value={edu.end} onChange={v => upList('education', i, 'end', v)} /></div>
+                  </div>
+                  <Input label="Marks / Grade" value={edu.grade} onChange={v => upList('education', i, 'grade', v)} />
+                  <button onClick={() => rem('education', edu.id)} style={{ width: '100%', padding: '6px', background: '#ef444415', border: '1px solid #ef444430', color: '#f87171', borderRadius: '6px', fontSize: '10px', cursor: 'pointer' }}>Delete Item</button>
+                </div>
+              ))}
+              <button onClick={() => add('education', { id: Date.now(), degree: 'Qualification', school: 'School / University', start: '', end: '', grade: '' })} style={{ width: '100%', padding: '10px', background: '#6366f110', border: '1px dashed #6366f1', color: '#818cf8', borderRadius: '8px', cursor: 'pointer', fontSize: '11px' }}>+ Add Education</button>
             </div>
 
             <div>
@@ -462,6 +485,10 @@ export default function SpecialTemplates({ userData, initialStyle, initialSectio
       visibleSections.projects = true;
     }
 
+    if (payload?.education?.length > 0) {
+      visibleSections.education = true;
+    }
+
     if (hasUserData) {
       return {
         ...SAMPLE_DATA,
@@ -554,12 +581,40 @@ export default function SpecialTemplates({ userData, initialStyle, initialSectio
     }
   };
 
-  const handlePdf = () => {
-    const el = document.getElementById('special-resume-preview');
-    const win = window.open('', '_blank');
-    win.document.write(`<html><head><title>Resume - ${data.profile.name}</title><style>@page{size:A4;margin:0}body{margin:0}*{box-sizing:border-box}a{color:inherit;text-decoration:none}</style></head><body>${el.outerHTML}</body></html>`);
-    win.document.close();
-    setTimeout(() => win.print(), 700);
+  const handlePdf = async () => {
+    const element = document.getElementById('special-resume-preview');
+    if (!element) return;
+
+    const { toast } = await import('react-hot-toast');
+    const toastId = toast.loading("Preparing your resume PDF...");
+
+    const opt = {
+      margin: 0,
+      filename: `Resume_${data.profile?.name || 'User'}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        letterRendering: true,
+        allowTaint: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        scrollY: 0,
+        scrollX: 0,
+        windowWidth: 794, // Fixed width for A4 at 96DPI
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'legacy'], avoid: '.section-avoid-break' }
+    };
+
+    try {
+      const html2pdf = (await import('html2pdf.js')).default;
+      await html2pdf().set(opt).from(element).save();
+      toast.success("Resume downloaded successfully!", { id: toastId });
+    } catch (error) {
+      console.error("PDF Generation Error:", error);
+      toast.error("PDF generation failed. Check console for details.", { id: toastId });
+    }
   };
 
   const resetAll = () => setStyle({ font: '"Times New Roman", serif', headingColor: '#000000', textColor: '#0f172a', nameFontSize: 32, h2FontSize: 14, h3FontSize: 12, bodyFontSize: 11, pagePadding: 15, sectionSpacing: 20, lineHeight: 1.4, letterSpacing: 0.02 });

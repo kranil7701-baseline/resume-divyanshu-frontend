@@ -84,6 +84,11 @@ const EditTemplatePage = () => {
             <Head>
                 <title>Edit Template | ResumeCraft</title>
                 <meta name="description" content="Edit your saved resume template." />
+                <style dangerouslySetInnerHTML={{ __html: `
+          body > div:last-child > span + img {
+            display: inline !important;
+          }
+        ` }} />
             </Head>
             <Navbar />
 
